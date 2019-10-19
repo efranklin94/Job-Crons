@@ -1,0 +1,1213 @@
+<link rel="stylesheet" type="text/css" href="js/plugins/PAT/forms/PAT_TP_ViewNewLetter/PAT_TP_ViewNewLetter.css">
+<link rel="stylesheet" type="text/css" href="css/trix.css">
+<div dynamic-ctrl class="custom-css rtl">
+
+    <ons-page>
+        <ons-toolbar style="direction: ltr;">
+            <div class="center" style="text-align: right">{{toolbarTitle}}</div>
+
+            <ons-back-button ng-click="backButton()">Back</ons-back-button>
+
+
+            
+            <ons-toolbar-button ng-show="formHasError" style="font-size: 18px;">
+                <ons-icon icon="fa-exclamation-triangle"></ons-icon>
+            </ons-toolbar-button>
+        </ons-toolbar>
+
+        <ons-scroller>
+            <div ng-if="!loaderDestroyed" ng-class="{'hidden-loader-container': !isLoading, 'loader-container': isLoading}" style="position: fixed; width: 100%; height: 100%; z-index: 9000;">
+                <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+            <section class="bgwhite">
+                <div ng-hide="items.length == 0"
+                     style="padding-bottom: 5px;padding-top: 5px">
+                    <section class="custom-box-form" style="padding-top: 5px;">
+                        <div style="border-bottom: solid 1px #fff;">
+                            <div class="centerRightHorVer">
+                                <h4 class="font13">آخرین ارجاع</h4>
+                            </div>
+                        </div>
+                        <div style="font-size: 12px;">
+                            {{previousLetFlowDTO.personName}}
+                        </div>
+
+                        <div ng-if="previousLetFlowDTO.description"
+                             style="border-bottom: solid 1px #fff;">
+                            <div class="centerRightHorVer">
+                                <h4 class="font13">هامش</h4>
+                            </div>
+                        </div>
+                        <p ng-if="previousLetFlowDTO.description"
+                           style="font-size: 12px;font-family:VazirBold !important; background-color:white;width: 100%;word-break: break-all;padding: 5px !important">
+                            {{previousLetFlowDTO.description}}
+                        </p>
+                    </section>
+                </div>
+
+                <div style="padding-bottom:5px">
+
+                    <section ng-if="letter.body!=null" style="position: relative; margin-top: 15px;" class="custom-box-form">
+                        <div style="border-bottom: solid 1px #fff;">
+                            <div class="centerRightHorVer">
+                                <i class="fa fa-pencil pull-right font20 colorPri"></i>
+                                <h4 class="font13">متن نامه</h4>
+                            </div>
+                        </div>
+                        <div class="text-coverage hidden-editor-buttons" style="margin-top: 10px;">
+                            <!-- <textarea style="height: 180px;" ng-model="letter.body" ng-disabled="isReadOnly"
+                                        ng-class="valid_body ? 'borderRed' : ''" class="textarea letterbody"
+                                        rows="3"
+                                        placeholder="متن نامه">
+                            </textarea> -->
+                            <trix-editor ng-focus="$event.target.blur()" angular-trix ng-model="letter.body"></trix-editor>
+                        </div>
+                    </section>
+
+
+
+                    <section ng-if="letter.docType.id && (letter.docType.id != '383')" class="custom-box-form"
+                            style="padding-top: 5px;">
+                        <div style="border-bottom: solid 1px #fff;">
+                            <div class="centerRightHorVer">
+                                <i class="fa fa-image pull-right font20 colorPri"></i>
+                                <h4 class="font13">تصویر نامه</h4>
+                            </div>
+                        </div>
+
+                        <div class="full-width custom-icon-section" style="padding: 0px">
+                            <div>
+                                <div ng-if="letter.bodyFile_trusted != null && pdfjsViewerDelayPassed == true">
+                                    <div style="height: 50vh;">
+                                        <pdfjs-viewer print="false" open="false" src="{{letter.bodyFile_trusted}}"></pdfjs-viewer>
+                                    </div>
+                                    <div>
+                                        <div class="centerRightHorVer">
+                                            <a ng-click="downloadItem({key: letter.bodyFile})">
+                                                <h4 class="font10"
+                                                    style="font-size: 13px !important;padding-right: 5px;">
+                                                    <b class="fa fa-download"
+                                                    style="padding-left:10px; color: blue;">دریافت تصویر نامه</b>
+                                                </h4>
+                                            </a>
+                                        </div>
+                                        <div ng-if="!isReadOnly && letter.docType.id == '385'" ng-click="removeLetterBodyFile()" class="centerLeftHorVer" style="float: left;">
+                                            <a ng-click="removeLetterBodyFile()">
+                                                <span class="notification"
+                                                    style="font-size: 13px !important;padding-right: 5px;">
+                                                    <i style="color:red;direction: ltr;" class="fa fa-trash">حذف</i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div ng-if="letter.bodyFile == null" class="centerRightHorVer" style="width: 100%;">
+                                    <section class="custom-box-form" style="width: 100%; margin: 10px !important;">
+                                        <h4 style="text-align: right">پیوست فایل</h4>
+                        
+                                        <div>
+                                            <section style="position:relative;">
+                                                <span style="position:absolute;bottom: 15px;text-align: center;top: inherit;right: 10px;width: 44px;border-radius: 100%;color: #fff;left: inherit;" class="dz-remove fa fa-trash removeuRL" ng-click="removeNewFile()"></span>
+                                                <ng-dropzone style="margin-top: 0;margin-bottom: 0" class="dropzone" options="dzOptions" callbacks="dzCallbacks" methods="dzMethods"></ng-dropzone>
+                                            </section>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div ng-hide="letterFlowDTOs.length == 0" style="padding-bottom: 5px;">
+                        <section class="custom-box-form">
+
+                            <div style="border-bottom: solid 1px #fff;">
+                                <div class="centerRightHorVer">
+                                    <i class="fa fa-question-circle-o pull-right font24 colorPri"></i>
+                                    <h4 class="font13">درخت ارجاعات</h4>
+                                </div>
+
+                                <div ng-show="!showFlowPanelTree"
+                                     style="float:left;padding-top:8px;"
+                                     ng-click="toggleFlowPanel()">
+                                    <i class="fa fa-eye pull-right font13 colorAccent"></i>
+                                </div>
+
+                                <div ng-show="showFlowPanelTree" style="float:left;padding-top:8px;"
+                                     ng-click="toggleFlowPanel()">
+                                    <i class="fa fa-eye-slash pull-right font13 colorAccent"></i>
+                                </div>
+                            </div>
+
+                            <ul class="ulCustom myTag" ng-show="showFlowPanelTree">
+                                <li ng-repeat="item in treeStructure track by $index"
+                                    ng-include="'tree_item_renderer.html'"></li>
+                            </ul>
+
+                            <script type="text/ng-template" id="tree_item_renderer.html">
+                                <ul class="myTagTest">
+                                    <li ng-click="showSlide(item)">
+                                        <section style="border-bottom: solid 1px #eee;padding: 7px;">
+                                            <i ng-class="!item.children[0].value.slide ? 'fa-chevron-circle-down' : 'fa-chevron-circle-up'" class="fa"></i>
+                                            <samp style="color: #8f8f8f;font-family:VazirBold !important">
+                                                {{(item.value.personType=='رونوشت' ? 'رونوشت به' : '')}}
+                                                {{(item.value.personType=='ایجاد کننده' ? 'ایجاد شده توسط' : '')}}
+                                                {{(item.value.personType=='ارجاع گیرنده' ? 'ارجاع گیرنده به' : '')}}
+                                                {{(item.value.personType=='گیرنده' ? 'ارسال به' :'')}}
+                                            </samp>
+                                                {{' ' + item.value.personName}}
+
+                                            <i ng-if="item.value.isRead == 'خوانده نشده'" class="fa fa-envelope" aria-hidden="true"></i>
+                                            <i ng-if="item.value.isRead == 'خوانده شده'" class="fa fa-envelope-open" aria-hidden="true"></i>
+                                            <div style="padding-right: 1rem; padding-top: 4px;">
+                                                <div ng-show="item.value.forActionFlow"
+                                                        style="display: block;font-weight: normal !important">
+                                                    <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+                                                <div style="display: inline; color: #8f8f8f;font-family:VazirBold !important">جهت:</div> {{item.value.forActionFlow}}
+                                                </div>
+                                                <div ng-show="item.value.forActionFlow == 'اقدام' && item.value.deadlineDate"
+                                                        style="display: block;font-weight: normal !important">
+                                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                                    <div style="display: inline; color: #8f8f8f;font-family:VazirBold !important">مهلت پاسخگویی:</div> {{item.value.deadlineDate}}
+                                                </div>
+                                                <div ng-show="item.value.description"
+                                                        style="display: block;font-weight: normal !important">
+                                                    <i class="fa fa-comment-o" aria-hidden="true"></i>
+                                                    <div style="display: inline; color: #8f8f8f;font-family:VazirBold !important">توضیحات:</div> {{item.value.description}}
+                                                </div>
+                                                <div ng-show="item.value.displayVerifyDate"
+                                                        style="display: block;font-weight: normal !important">
+                                                    <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                                                    <div style="display: inline; color: #8f8f8f;font-family:VazirBold !important">تاریخ ارجاع:</div> {{item.value.displayVerifyDate}}
+                                                </div>
+                                            </div>
+                                        </section>
+                                    </li>
+                                </ul>
+
+                                <ul class="ulCustom myTag">
+                                    <li ng-repeat="item in item.children track by $index"
+                                        ng-include="'tree_item_renderer.html'"
+                                        ng-show="item.value.slide">
+                                    </li>
+                                </ul>
+                            </script>
+
+                            <div ng-show="hamesh && showFlowPanelTree"
+                                 style="margin-top: 10px;font-size:12px">{{hamesh}}
+                            </div>
+
+                        </section>
+                    </div>
+
+
+                    <div style="padding-bottom: 5px;">
+
+                        <section class="custom-box-form">
+                            <div style="border-bottom: solid 1px #fff;">
+                                <div class="centerRightHorVer">
+                                    <i class="fa fa-envelope pull-right font24 colorPri"></i>
+                                    <h4 class="font13">اطلاعات نامه</h4>
+                                </div>
+
+                                <div ng-show="!showLetterPanelTree"
+                                     style="float:left; padding-top:8px;"
+                                     ng-click="toggleLetterPanel()">
+                                    <i class="fa fa-eye pull-right font13 colorAccent"></i>
+                                </div>
+
+                                <div ng-show="showLetterPanelTree"
+                                     style="float:left;padding-top:8px;"
+                                     ng-click="toggleLetterPanel()">
+                                    <i class="fa fa-eye-slash pull-right font13 colorAccent"></i>
+                                </div>
+                            </div>
+
+                            <ons-row ng-show="showLetterPanelTree">
+                                <ons-row class="letter_info_row">
+                                    <ons-col style="margin-left: 0.3rem;">
+                                        <label class="font13">ایجاد کننده</label>
+                                        <input disabled type="text" class="text-input"
+                                               placeholder="ایجاد کننده"
+                                               ng-model="letter.vrCreator_value || letter.fromPerson_value"/>
+                                    </ons-col>
+                                    <ons-col class="letter_info_row">
+                                        <label class="font13">شماره نامه</label>
+                                        <input disabled type="text" class="text-input"
+                                               placeholder="شماره نامه"
+                                               ng-model="letter.letterNo"/>
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row">
+                                    <ons-col style="margin-left: 0.3rem;">
+                                        <label class="font13">تاریخ امضا</label>
+                                        <input disabled type="text" class="text-input"
+                                               placeholder="تاریخ امضا"
+                                               ng-model="signDate"/>
+                                    </ons-col>
+                                    <ons-col class="letter_info_row">
+                                        <label class="font13">شماره کار</label>
+                                        <input disabled type="text" class="text-input"
+                                               placeholder="شماره کار"
+                                               ng-model="letter.taskNo"/>
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row"  
+                                    style="padding-top: 5px; padding-bottom: 5px; margin-top: 2rem;">
+                                    <label class="font13">گیرندگان حقیقی</label>
+                                    <div class="relative" style="margin-bottom: 10px; width: 100%;">
+                                        <i ng-if="loaders.loadingToPersons"
+                                            style="color:#333;position: absolute;top:10px;left:5em;z-index:1000;"
+                                            class="loaderIcon loadingRotate fa fa-spinner">
+                                        </i>
+                                        <div class="customcoverage rightfloat">
+                                            <div style="display:table;">
+                                                <tags-input placeholder="گیرندگان حقیقی" ng-model="toPersonSet" 
+                                                            style="padding-left: 0px; padding-right: 0px; display:table-cell;"
+                                                            display-property="title" class="text-input"
+                                                            replace-spaces-with-dashes="false"
+                                                            add-from-autocomplete-only="true"
+                                                            ng-disabled="isReadOnly"
+                                                            class="text-input">
+                                                    <auto-complete maxTags="-1" ng-disabled="isReadOnly"
+                                                                    source="searchNewPersonTags($query, 'loadingToPersons')"></auto-complete>
+                                                </tags-input>
+                                                <ons-button ng-disabled="isReadOnly" ng-click="showPersonSearchModal('toPersonSet')" style="display: table-cell;"><i class="fa fa-search"></i></ons-button>
+                                                <div style="width: 2px;"></div>
+                                                <ons-button ng-disabled="isReadOnly" ng-click="showGroupSearchModal('toPersonSet')" style="display: table-cell;"><i class="fa fa-group"></i></ons-button>
+                                            </div>
+                                            <div ng-repeat="item in toPersonSet" class="font13 rtl" ng-click="showValue(toPersonSet)"
+                                                style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px; margin-bottom: 0px;">
+                                                <ons-row style="width: 100%;">
+                                                    <ons-col class="centerHorVer" width="2rem"
+                                                        style="border-left: solid 1px gray; margin-left: 0.5rem;">
+                                                        {{ item.order || '-' }}
+                                                    </ons-col>
+                                                    <ons-col class="centerHorVer"
+                                                        style="justify-content: right;">
+                                                        {{ item.title || (((item.first_name.trim() + " " + item.last_name.trim()).trim() || item.vrPersonValue.trim()) + " " + item.role_title.trim() + " " + item.ou_title.trim())}}
+                                                    </ons-col>
+                                                    <ons-col width="40px" class="centerHorVer">
+                                                        <ons-row>
+                                                            <ons-col ng-if="!isReadOnly"
+                                                                    ng-click="toPersonSet.splice($index, 1)"
+                                                                    class="centerHorVer font22"
+                                                                    style="height: 31px;color: #666;">
+                                                                <ons-icon icon="ion-ios-trash"></ons-icon>
+                                                            </ons-col>
+                                                        </ons-row>
+                                                    </ons-col>
+                                                </ons-row>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row"
+                                    style="padding-top: 5px; padding-bottom: 5px; text-align: center">
+                                    <ons-col>
+                                        <ons-button ng-click="ccModal.show()" style="width: 95%">
+                                            رونوشت [{{ccPersonSet.length || 0}}]
+                                        </ons-button>
+                                    </ons-col>
+
+                                    <ons-col>
+                              
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row"
+                                    style="padding-top: 5px; padding-bottom: 5px; margin-top: 2rem;">
+                                    <ons-col>
+                                        <label class="font13">گیرندگان حقوقی</label>
+                                        <div class="relative" style="margin-bottom: 10px; position: relative;"
+                                            ng-class="valid_toPersonSet ? 'borderRed' : ''">
+                                            <i ng-if="toOrganizationSet_wait"
+                                                style="color:#333;position: absolute;top:10px;left:1%;z-index:1000;"
+                                                class="loaderIcon loadingRotate fa fa-spinner">
+                                            </i>
+                                            <div class="customcoverage rightfloat">
+                                                <tags-input placeholder="گیرندگان حقوقی" ng-model="toOrganizationSet"
+                                                            style="padding-left: 0px; padding-right: 0px;"
+                                                            display-property="title" class="text-input"
+                                                            replace-spaces-with-dashes="false"
+                                                            add-from-autocomplete-only="true"
+                                                            ng-disabled="isReadOnly"
+                                                            class="text-input">
+                                                    <auto-complete maxTags="-1" ng-disabled="isReadOnly"
+                                                                    source="promiseLoadOrganizationTags($query)"></auto-complete>
+                                                </tags-input>
+                                                <div ng-repeat="item in toOrganizationSet" class="font13 rtl"
+                                                    style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px; margin-bottom: 0px;">
+                                                    <ons-row style="width: 100%;">
+                                                        <ons-col class="centerHorVer" width="2rem"
+                                                            style="border-left: solid 1px gray; margin-left: 0.5rem;">
+                                                            {{ item.order || '-' }}
+                                                        </ons-col>
+                                                        <ons-col class="centerHorVer"
+                                                                    style="justify-content: right;">
+                                                            {{item.title}}
+                                                        </ons-col>
+                                                        <ons-col width="40px" class="centerHorVer">
+                                                            <ons-row>
+                                                                <ons-col ng-if="!isReadOnly"
+                                                                        ng-click="toOrganizationSet.splice($index, 1)"
+                                                                        class="centerHorVer font22"
+                                                                        style="height: 31px;color: #666;">
+                                                                    <ons-icon icon="ion-ios-trash"></ons-icon>
+                                                                </ons-col>
+                                                            </ons-row>
+                                                        </ons-col>
+                                                    </ons-row>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row" style="margin-top: 2rem;">
+                                    <ons-col>
+                                        <label class="font13">موضوع</label>
+                                        <input ng-disabled="isReadOnly" type="text" class="text-input" 
+                                                placeholder="موضوع" style="color: black"
+                                                ng-model="letter.subject"/>
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row"
+                                         style="padding-top: 10px; text-align: center">
+                                    <ons-col>
+                                        <ons-button ng-click="openAttachmentListModal()" style="width: 90%">
+                                            <i class="fa fa-paperclip"></i> ضمیمه ها
+                                        </ons-button>
+                                    </ons-col>
+
+                                    <ons-col>
+                                        <ons-button ng-click="relatedLettersModal.show()" style="width: 90%">
+                                            <i class="fa fa-envelope"></i> نامه های مرتبط
+                                        </ons-button>
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row" style="margin-top: 2rem;">
+                                    <ons-col>
+                                        <label class="font13">امضا کننده</label>
+                                        <div class="relative" style="margin-bottom: 10px; position: relative;"
+                                            ng-class="valid_toPersonSet ? 'borderRed' : ''">
+                                            <i ng-if="loaders.loadingSigner"
+                                                style="color:#333;position: absolute;top:10px;left:2.5em;z-index:1000;"
+                                                class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                            <div class="customcoverage rightfloat">
+                                                <div class="customcoverage rightfloat">
+                                                    <div ng-hide="signer[0].id" style="display: table;">
+                                                        <tags-input placeholder="امضا کننده" ng-model="signer"
+                                                                    style="display: table-cell;"
+                                                                    display-property="title" class="text-input"
+                                                                    replace-spaces-with-dashes="false"
+                                                                    add-from-autocomplete-only="true"
+                                                                    ng-disabled="isReadOnly"
+                                                                    class="text-input">
+                                                            <auto-complete maxTags="1" ng-disabled="isReadOnly"
+                                                                        source="searchNewAutomationPersonTags($query, 'loadingSigner')"></auto-complete>
+                                                        </tags-input>
+                                                        <ons-button ng-disabled="isReadOnly" ng-click="showPersonSearchModal('signer')"><i class="fa fa-search"></i></ons-button>
+                                                    </div>
+                                                    <div ng-repeat="item in signer track by $index" class="font13 rtl"
+                                                        style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px;">
+                                                        <ons-row style="width: 100%;">
+                                                            <ons-col class="centerHorVer"
+                                                                style="justify-content: right;">
+                                                                {{ item.title || (((item.first_name.trim() + " " + item.last_name.trim()).trim() || item.vrPersonValue.trim()) + " " + item.role_title.trim() + " " + item.ou_title.trim())}}
+                                                            </ons-col>
+                                                            <ons-col width="40px" class="centerHorVer">
+                                                                <ons-row>
+                                                                    <ons-col ng-if="!isReadOnly"
+                                                                            ng-click="signer.splice($index, 1)"
+                                                                            class="centerHorVer font22"
+                                                                            style="height: 31px;color: #666;">
+                                                                        <ons-icon icon="ion-close"></ons-icon>
+                                                                    </ons-col>
+                                                                </ons-row>
+                                                            </ons-col>
+                                                        </ons-row>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ons-col>
+                                </ons-row>
+
+                                <!-- <ons-row ng-repeat="item in letter.attachmentSet track by $index" class="letter_info_row"
+                                         style="padding-top: 10px; text-align: center">
+                                    <ons-col>
+                                        <ons-button ng-click="goToAttachmentPage($event, 'targetId_1544006481_579', item.vrAttachmentDocument)" style="width: 90%">
+                                            <i class="fa fa-paperclip"></i>ضمیمه {{$index + 1}}
+                                        </ons-button>
+                                    </ons-col>
+                                </ons-row> -->
+
+                                <ons-row class="letter_info_row" style="padding-top: 10px">
+                                    <ons-col class="custom-select-new rtl"
+                                             style="margin-right: 2px;">
+                                        <label class="font13">سطح محرمانگی</label>
+                                        <div ng-hide="PATSecurityArray_wait"
+                                             class="select select-material select-underbar">
+                                            <select data-title="سطح محرمانگی" ng-disabled="isReadOnly"
+                                                    class="select-input select-input--material select-input--underbar form-control mobileSelect"
+                                                    size="10" ng-model="letterSecurity">
+                                                <option ng-repeat="item in PATSecurityArray track by $index"
+                                                        ng-value="item">{{item.value}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <i ng-if="PATSecurityArray_wait"
+                                           class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                    </ons-col>
+
+                                    <ons-col class="custom-select-new rtl"
+                                             style="margin-left: 2px;padding-right: 5px">
+                                        <label class="font13">سطح اولویت</label>
+                                        <div ng-hide="PATLetterPriorityArray_wait"
+                                             class="select select-material select-underbar">
+                                            <select data-title="سطح اولویت" ng-disabled="isReadOnly"
+                                                    class="select-input select-input--material select-input--underbar form-control mobileSelect"
+                                                    size="10" ng-model="letterPriority">
+                                                <option ng-repeat="item in PATLetterPriorityArray track by $index"
+                                                        ng-value="item">{{item.value}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <i ng-if="PATLetterPriorityArray_wait"
+                                           class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row">
+                                    <ons-col>
+                                        <label class="font13">طبقه بندی نامه</label>
+                                        <div ng-hide="PATLetterTypeArray_wait"
+                                             class="select select-material select-underbar">
+                                            <select data-title="طبقه بندی نامه" ng-disabled="isReadOnly"
+                                                    class="select-input select-input--material select-input--underbar form-control mobileSelect"
+                                                    size="10" ng-model="letterType">
+                                                <option ng-repeat="item in PATLetterTypeArray track by $index"
+                                                        ng-value="item">{{item.value}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <i ng-if="PATLetterTypeArray_wait" class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                    </ons-col>
+                                    <ons-col></ons-col>
+                                </ons-row>
+                            </ons-row>
+                        </section>
+                        <section ng-if="isReadOnly" class="custom-box-form">
+                            <ons-row class="letter_info_row">
+                                <ons-col>
+                                    <label class="font13">توضیحات بستن</label>
+                                    <textarea ng-model="letter._description"
+                                        ng-class="valid_body ? 'borderRed' : ''" class="textarea letterbody"
+                                        rows="3"
+                                        placeholder="توضیحات بستن">
+                                    </textarea>
+                                </ons-col>
+                            </ons-row>
+                        </section>
+                    </div>
+
+
+
+                    <div style="padding-bottom: 5px;">
+                        <ons-row class="letter_info_row"
+                            style="padding-top: 5px; padding-bottom: 5px; text-align: center">
+                            <!-- <ons-col ng-if="!isReadOnly && myId == signer[0].id">
+                                <ons-button ng-click="sendForm('SUBMIT')" style="width: 95%">
+                                    امضا و صدور
+                                </ons-button>
+                            </ons-col> -->
+                            <ons-col ng-if="isReadOnly">
+                                <ons-button ng-click="sendForm('CLOSE')" style="width: 95%">
+                                    بستن
+                                </ons-button>
+                            </ons-col>
+                        </ons-row>
+                    </div>
+                </div>
+            </section>
+
+        </ons-scroller>
+
+    </ons-page>
+
+    <ons-modal var="relatedLettersModal" dir="rtl">
+        <div style="display:flex; flex-direction: column; height:100%; max-height: 100%;">
+            <fieldset  ng-style="{height: letter.relatedLetter[selectedRelatedLetterIndex]? '50%' : '100%'}">
+                <legend><b>نامه های مرتبط</b></legend>
+                <table style="width: 100%">
+                    <tr>
+                        <div>
+                            <ons-button style="width: 100%; margin-bottom: 5px;" 
+                                ng-click="searchRelatedLettersModal.show()" ng-disabled="isReadOnly">
+                                افزودن
+                            </ons-button>
+                        </div>
+                        <div style="max-height:10rem; overflow:scroll;">
+                            <div ng-repeat="item in letter.relatedLetter track by $index"
+                                ng-click="selectRelatedLetterToDisplay($index)"
+                                style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px;"
+                                ng-class="(selectedRelatedLetterIndex==$index)?'borderRed font13 rtl':'font13 rtl'">
+                                <ons-row style="width: 100%;">
+                                    <ons-col class="centerHorVer"
+                                            style="justify-content: right; color: black;">
+                                        {{item.letter.id}}
+                                    </ons-col>
+                                    <ons-col width="40px" class="centerHorVer">
+                                        <ons-row>
+                                            <ons-col
+                                                    ng-if="!isReadOnly"
+                                                    ng-click="letter.relatedLetter.splice($index, 1)"
+                                                    class="centerHorVer font22"
+                                                    style="height: 31px;color: #666;">
+                                                <ons-icon icon="ion-ios-trash"></ons-icon>
+                                            </ons-col>
+                                        </ons-row>
+                                    </ons-col>
+                                </ons-row>
+                            </div>
+                        </div>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset ng-if="letter.relatedLetter[selectedRelatedLetterIndex]" style="height: 50%;">
+                <legend><b>جزئیات نامه</b></legend>
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <label class="font13">مرتبط با نامه</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="letter.relatedLetter[selectedRelatedLetterIndex].letter.id" readonly type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <div style="max-height:10rem; overflow:scroll;">
+                            <div ng-repeat="item in _toPersonSet" class="font13 rtl"
+                                style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px;">
+                                <ons-row style="width: 100%;">
+                                    <ons-col class="centerHorVer"
+                                                style="justify-content: right;">
+                                        {{item.title}}
+                                    </ons-col>
+                                    <ons-col width="40px" class="centerHorVer">
+                                        <ons-row>
+                                            <ons-col
+                                                    ng-click="removePersonTag($index,'_toPersonSet')"
+                                                    class="centerHorVer font22"
+                                                    style="height: 31px;color: #666;">
+                                                <ons-icon icon="ion-ios-trash"></ons-icon>
+                                            </ons-col>
+                                        </ons-row>
+                                    </ons-col>
+                                </ons-row>
+                            </div>
+                            <div ng-repeat="item in _toPersonSet" class="font13 rtl"
+                                style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px;">
+                            </div>
+                        </div>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="font13">نوع نامه مرتبط</label>                            
+                        </td>
+                        <td>
+                            <select class="select-input select-input--material select-input--underbar form-control mobileSelect" style="background-color: white; width: 100%;"
+                                    ng-model="letter.relatedLetter[selectedRelatedLetterIndex].relatedLetterType.meta">
+                                <option ng-repeat="item in PATRelatedLetterTypeArray track by $index"
+                                        ng-value="item">{{item.value}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="font13">شماره نامه</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="letter.relatedLetter[selectedRelatedLetterIndex].letter.letterNo" readonly type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="font13">تاریخ</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="letter.relatedLetter[selectedRelatedLetterIndex].letter.verifydate_persian" readonly type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="font13">موضوع</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="letter.relatedLetter[selectedRelatedLetterIndex].letter.subject" readonly type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <div>
+                <ons-button style="width: 95%; margin-top: 5px; margin-bottom: 15px;" ng-click="relatedLettersModal.hide()">
+                    بازگشت
+                </ons-button>
+            </div>
+        </div>
+    </ons-modal>    
+
+    <ons-modal var="searchRelatedLettersModal" dir="rtl" style="background-color:rgba(0,0,0,0.9)">
+        <div style="display:flex; flex-direction: column; height: 100%;">        
+            <fieldset>
+                <legend><b>جستجوی نامه</b></legend>
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <label class="font13">فرستنده حقیقی</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="searchRelatedLetters_sender" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="font13">شماره نامه</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="searchRelatedLetters_letterNo" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <td>
+                            <label class="font13">تاریخ</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="searchRelatedLetters_date" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr> -->
+                    <tr>
+                        <td>
+                            <label class="font13">موضوع</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="searchRelatedLetters_subject" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <div>
+                                <ons-button style="width: 100%;" 
+                                    ng-click="searchRelatedLetter()"
+                                    ng-disabled="relatedLetterSearchResultArray_wait">
+                                    جستجو
+                                    <i ng-if="!relatedLetterSearchResultArray_wait" class="fa fa-search"></i>
+                                    <i ng-if="relatedLetterSearchResultArray_wait"
+                                        style="color:rgb(255, 255, 255);"
+                                        class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                </ons-button>
+                            </div>    
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset style="flex:auto;">
+                <legend><b>نتایج جستجو</b></legend>
+                <div style="max-height:40vh; overflow:scroll;" scroll-bottom="searchRelatedLetter(relatedLetterSearchResultArray.length-1)">
+                    <table style="width: 100%">
+                        <thead>
+                            <tr ng-hide="!relatedLetterSearchResultArray.length"
+                                    style="width: 100%; margin-bottom: 5px;">
+                                <th class="font13"
+                                        style="justify-content: right;">
+                                    شماره نامه
+                                </th>
+                                <th class="font13"
+                                        style="justify-content: center;">
+                                    موضوع
+                                </th>
+                                <th class="font13"
+                                        style="justify-content: left;">
+                                    تاریخ
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in relatedLetterSearchResultArray track by $index"
+                                ng-click="selectRelatedLetterFromSearch(item)"
+                                style="border: solid 1px black;padding: 5px 5px 0 0px; line-height: 2rem; background-color: white; color: black; border-radius: 5px"
+                                class="font13 rtl">
+                                    <td style="justify-content: right; border-top-right-radius: 5px; border-bottom-right-radius: 5px; white-space: nowrap">
+                                        {{item.letterNo}}
+                                    </td>
+                                    <td style="justify-content: center;">
+                                        {{item.subject}}
+                                    </td>
+                                    <td style="text-align: center; border-top-left-radius: 5px; border-bottom-left-radius: 5px">
+                                        {{item.verifydate_persian}}
+                                    </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </fieldset>
+            <div>
+                <ons-button style="width: 95%; margin-top: 5px; margin-bottom: 15px;" ng-click="searchRelatedLettersModal.hide()">
+                    بازگشت
+                </ons-button>
+            </div>
+        </div>
+    </ons-modal>
+
+
+    <ons-modal var="ccModal" dir="rtl">
+        <div style="display:flex; flex-direction: column; height: 100%;">
+        <fieldset style="height: 100%;">
+            <legend><b>رونوشت</b></legend>
+            <div class="relative">
+                <i ng-if="loaders.loadingCcPersons"
+                    style="color:#333;position: absolute;top:10px;left:5em;z-index:1000;"
+                    class="loaderIcon loadingRotate fa fa-spinner"></i>
+                <div class="customcoverage rightfloat">
+                    <div ng-hide="isReadOnly" style="display: table;">
+                        <tags-input placeholder="جستجوی اشخاص" ng-model="ccPersonSet" ng-disabled="isReadOnly"
+                                    style="padding-left: 0px; padding-right: 0px; display: table-cell;"
+                                    display-property="title" class="text-input"
+                                    replace-spaces-with-dashes="false"
+                                    add-from-autocomplete-only="true"
+                                    ng-hide="isReadOnly"
+                                    class="text-input">
+                            <auto-complete maxTags="-1" ng-disabled="isReadOnly"
+                                source="searchNewPersonTags($query, 'loadingCcPersons')"></auto-complete>
+                        </tags-input>
+                        <ons-button ng-click="showPersonSearchModal('ccPersonSet')" style="display: table-cell;"><i class="fa fa-search"></i></ons-button>
+                        <div style="width: 2px;"></div>
+                        <ons-button ng-click="showGroupSearchModal('ccPersonSet')" style="display: table-cell;"><i class="fa fa-group"></i></ons-button>
+                    </div>
+                    <div style="max-height: 70vh; overflow: scroll;">
+                    <div ng-repeat="item in ccPersonSet" class="font13 rtl"
+                        style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px; margin-bottom: 0px;">
+                        <ons-row style="width: 100%;">
+                            <ons-col class="centerHorVer" width="2rem"
+                                style="border-left: solid 1px gray; margin-left: 0.5rem; color: black;">
+                                {{ item.order || '-' }}
+                            </ons-col>
+                            <ons-col class="centerHorVer"
+                                style="justify-content: right; color: black;">
+                                {{ item.title || (((item.first_name.trim() + " " + item.last_name.trim()).trim() || item.vrPersonValue.trim()) + " " + item.role_title.trim() + " " + item.ou_title.trim())}}
+                            </ons-col>
+                            <ons-col width="40px" class="centerHorVer">
+                                <ons-row>
+                                    <ons-col ng-if="!isReadOnly"
+                                            ng-click="setResponseTime(item)"
+                                            class="centerHorVer font22"
+                                            style="height: 31px;color: #666;" ng-style="item.deadline?{color: 'blue'}:{color: '#666'}">
+                                        <ons-icon icon="ion-ios-time"></ons-icon>
+                                    </ons-col>
+                                </ons-row>
+                            </ons-col>
+                            <ons-col width="40px" class="centerHorVer">
+                                <ons-row>
+                                    <ons-col ng-click="showCommentArea(item)"
+                                            class="centerHorVer font22"
+                                            style="height: 31px;color: #666;" ng-style="item.description?{color: 'blue'}:{color: '#666'}">
+                                        <ons-icon icon="ion-ios-list"></ons-icon>
+                                    </ons-col>
+                                </ons-row>
+                            </ons-col>
+                            <ons-col width="40px" class="centerHorVer">
+                                <ons-row>
+                                    <ons-col ng-if="!isReadOnly"
+                                            ng-click="ccPersonSet.splice($index, 1)"
+                                            class="centerHorVer font22"
+                                            style="height: 31px;color: #666;">
+                                        <ons-icon icon="ion-ios-trash"></ons-icon>
+                                    </ons-col>
+                                </ons-row>
+                            </ons-col>
+                        </ons-row>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div>
+            <ons-button style="width: 95%; margin-top: 5px; margin-bottom: 15px;" ng-click="ccModal.hide()">
+                بازگشت
+            </ons-button>
+        </div>
+        </div>
+    </ons-modal>    
+
+    <ons-modal var="bccModal" dir="rtl">
+        <div style="display:flex; flex-direction: column; height: 100%;">
+        <fieldset style="height: 100%;">
+            <legend><b>رونوشت مخفی</b></legend>
+            <div class="relative">
+                <i ng-if="loaders.loadingBccPersons"
+                    style="color:#333;position: absolute;top:10px;left:2.5em;z-index:1000;"
+                    class="loaderIcon loadingRotate fa fa-spinner"></i>
+                <div class="customcoverage rightfloat">
+                    <div ng-hide="isReadOnly" style="display: table;">
+                        <tags-input placeholder="جستجوی اشخاص" ng-model="bccPersonSet" ng-disabled="isReadOnly"
+                                    style="padding-left: 0px; padding-right: 0px; display: table-cell;"
+                                    display-property="title" class="text-input"
+                                    replace-spaces-with-dashes="false"
+                                    add-from-autocomplete-only="true"
+                                    class="text-input">
+                            <auto-complete maxTags="-1" ng-disabled="isReadOnly"
+                                            source="searchNewPersonTags($query, 'loadingBccPersons')"></auto-complete>
+                        </tags-input>
+                        <ons-button ng-click="showPersonSearchModal('bccPersonSet')"><i class="fa fa-search"></i></ons-button>
+                    </div>
+                    <div style="max-height: 70vh; overflow: scroll;">
+                    <div ng-repeat="item in bccPersonSet" class="font13 rtl"
+                        style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px; margin-bottom: 0px;">
+                        <ons-row style="width: 100%;" ng-click="showValue(item)">
+                            <ons-col class="centerHorVer" width="2rem"
+                                style="border-left: solid 1px gray; margin-left: 0.5rem; color: black;">
+                                {{ item.order || '-' }}
+                            </ons-col>
+                            <ons-col class="centerHorVer"
+                                style="justify-content: right; color: black;">
+                                {{ item.title || (((item.first_name.trim() + " " + item.last_name.trim()).trim() || item.vrPersonValue.trim()) + " " + item.role_title.trim() + " " + item.ou_title.trim())}}
+                            </ons-col>
+                            <ons-col width="40px" class="centerHorVer">
+                                <ons-row>
+                                    <ons-col ng-if="!isReadOnly"
+                                            ng-click="setResponseTime(item)"
+                                            class="centerHorVer font22"
+                                            style="height: 31px;color: #666;" ng-style="item.deadline?{color: 'blue'}:{color: '#666'}">
+                                        <ons-icon icon="ion-ios-time"></ons-icon>
+                                    </ons-col>
+                                </ons-row>
+                            </ons-col>
+                            <ons-col width="40px" class="centerHorVer">
+                                <ons-row>
+                                    <ons-col ng-click="showCommentArea(item)"
+                                            class="centerHorVer font22"
+                                            style="height: 31px;color: #666;" ng-style="item.description?{color: 'blue'}:{color: '#666'}">
+                                        <ons-icon icon="ion-ios-list"></ons-icon>
+                                    </ons-col>
+                                </ons-row>
+                            </ons-col>
+                            <ons-col width="40px" class="centerHorVer">
+                                <ons-row>
+                                    <ons-col ng-if="!isReadOnly"
+                                            ng-click="bccPersonSet.splice($index, 1)"
+                                            class="centerHorVer font22"
+                                            style="height: 31px;color: #666;">
+                                        <ons-icon icon="ion-ios-trash"></ons-icon>
+                                    </ons-col>
+                                </ons-row>
+                            </ons-col>
+                        </ons-row>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div>
+            <ons-button style="width: 95%; margin-top: 5px; margin-bottom: 15px;" ng-click="bccModal.hide()">
+                بازگشت
+            </ons-button>
+        </div>
+        </div>
+    </ons-modal>
+
+    
+    <ons-modal var="searchPersonModal" dir="rtl" style="background-color:rgba(0,0,0,0.9)">
+        <div style="display:flex; flex-direction: column; height: 100%;">
+            <fieldset>
+                <legend><b>جستجوی اشخاص حقیقی</b></legend>
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <label class="font13">نام</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="personSearch_firstname" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="font13">نام خانوادگی</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="personSearch_lastname" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <div>
+                                <ons-button style="width: 100%;" 
+                                    ng-click="searchPersonForModal(personSearch_firstname, personSearch_lastname, 'loadingPersons')">
+                                    جستجو 
+                                    <i ng-if="!loaders.loadingPersons" class="fa fa-search"></i>
+                                    <i ng-if="loaders.loadingPersons"
+                                        style="color:rgb(255, 255, 255);"
+                                        class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                </ons-button>
+                            </div>    
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset style="flex:auto; max-width: 100vw;">
+                <legend><b>نتایج جستجو</b></legend>
+                <table style="width: 100%">
+                    <tr >
+                        
+                    </tr>
+                    <tr>
+                        <ons-row ng-hide="!modalPersonSearchResultArray.length"
+                                style="width: 100%; margin-bottom: 5px;">
+                            <ons-col class="centerHorVer font13"
+                                    style="justify-content: right; color: white;">
+                                نام
+                            </ons-col>
+                            <ons-col class="centerHorVer font13"
+                                    style="justify-content: center; color: white;">
+                                نام خانوادگی
+                            </ons-col>
+                            <ons-col class="centerHorVer font13"
+                                    style="justify-content: left; color: white;">
+                                نقش
+                            </ons-col>
+                        </ons-row>
+                        <div style="max-height:40vh; max-width: 100%; overflow:scroll;" scroll-bottom="searchPersonForModal(personSearch_firstname, personSearch_lastname, 'loadingPersons', modalPersonSearchResultArray.length-1)">
+                            <div ng-repeat="item in modalPersonSearchResultArray track by $index"
+                                ng-click="selectPersonFromSearchModal(item)"
+                                class="font13 rtl">
+                                <ons-row style="max-width: 90vw; line-height: 3rem;">
+                                    <ons-col class="centerHorVer"
+                                            style="justify-content: right; color: black; background: white; border:1px solid black; white-space: nowrap; border-bottom-right-radius: 5px; border-top-right-radius: 5px; padding-right: 1rem;">
+                                        {{item.first_name}}
+                                    </ons-col>
+                                    <ons-col class="centerHorVer"
+                                            style="justify-content: center; color: black; background: white; border:1px solid black; white-space: nowrap;">
+                                        {{item.last_name}}
+                                    </ons-col>
+                                    <ons-col class="centerHorVer"
+                                            style="justify-content: left; color: black; background: white; border:1px solid black; overflow:scroll; text-overflow:ellipsis; white-space: nowrap; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                        {{item.role_title}}
+                                    </ons-col>
+                                </ons-row>
+                            </div>
+                        </div>
+                    </tr>
+                </table>
+            </fieldset>
+            <div>
+                <ons-button style="width: 95%; margin-top: 5px; margin-bottom: 15px;" ng-click="searchPersonModal.hide()">
+                    بازگشت
+                </ons-button>
+            </div>
+        </div>
+    </ons-modal>
+    
+    <ons-modal var="groupSearchModal" dir="rtl" style="background-color:rgba(0,0,0,0.9)">
+        <div style="display:flex; flex-direction: column; height: 100%;">
+            <fieldset>
+                <legend><b>جستجوی گروه</b></legend>
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <label class="font13">نام گروه</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="gutitle" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <div>
+                                <ons-button style="width: 100%;" 
+                                    ng-click="searchGroupForModal(gutitle, 'loadingGroups')">
+                                    جستجو 
+                                    <i ng-if="!loaders.loadingGroups" class="fa fa-search"></i>
+                                    <i ng-if="loaders.loadingGroups"
+                                        style="color:rgb(255, 255, 255);"
+                                        class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                </ons-button>
+                            </div>    
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset style="flex: auto;">
+                <div style="max-width: 95vw">
+                    <legend><b>نتایج جستجو</b></legend>
+                    <ons-row ng-hide="!modalGroupSearchResultArray.length"
+                            style="max-width: 100%; margin-bottom: 5px;">
+                        <ons-col class="centerHorVer font13"
+                                style="justify-content: right; color: white;">
+                            نام گروه
+                        </ons-col>
+                    </ons-row>
+                    <div style="max-height: 50vh; max-width: 100%; overflow:scroll;" scroll-bottom="searchGroupForModal(gutitle, 'loadingGroups', modalGroupSearchResultArray.length-1)">
+                        <div ng-repeat="item in modalGroupSearchResultArray track by $index"
+                            ng-click="selectGroupFromSearchModal(item)"
+                            class="font13 rtl">
+                            <ons-row>
+                                <ons-col class="centerHorVer"
+                                        style="justify-content: right; color: black; background: white; border:1px solid black; white-space: nowrap; border-radius: 3px; border: 1px white outset; margin: 1px; line-height: 3rem; padding-right: 1rem;">
+                                    {{item.gutitle}}
+                                </ons-col>
+                            </ons-row>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <div>
+                <ons-button style="width: 95%; margin-top: 5px; margin-bottom: 15px;" ng-click="groupSearchModal.hide()">
+                    بازگشت
+                </ons-button>
+            </div>
+        </div>
+    </ons-modal>
+
+    <ons-modal var="commentAreaModal" dir="rtl">
+        <div>
+            <div class="rtl centerHorVer">
+                <textarea ng-disabled="isReadOnly" ng-model="activeItemForComment.description" rows="5" style="width: 95%;" class="textarea" placeholder="جهت"></textarea>
+            </div>
+            <div class="rtl centerHorVer">
+                <ons-button style="margin-top: 5px; width:95%;" ng-click="commentAreaModal.hide()"
+                            class="btn button button--material">
+                    <ons-ripple></ons-ripple>
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+            </div>
+        </div>
+    </ons-modal>    
+
+    <ons-modal var="attachmentListModal" dir="rtl">
+        <div>
+            <div class="rtl centerHorVer">
+                <div style="max-height: 50vh; max-width: 100%; width: 95%; overflow:scroll; border: 1px solid gray; border-radius: 5px; padding: 2px; min-height: 10vh;">
+                    <div ng-repeat="item in letter.attachmentSet track by $index"
+                        class="font13 rtl" style="border: 1px solid white; border-radius: 5px; margin-bottom: 0.5rem; padding: 0.5rem;">
+                        <ons-row>
+                            <ons-col class="centerHorVer"
+                                    style="justify-content: right; color: black; background: white; border:1px solid black; white-space: nowrap; border-radius: 3px; border: 1px white outset; margin: 1px; line-height: 2rem;">
+                                <textarea readonly ng-model="item.title" rows="1" style="width: 100%;" class="textarea" placeholder="{{item.vrAttachmentDocument || 'عنوان'}}"></textarea>                                
+                                <ons-button style="text-overflow: clip; margin-left: 1px; width: 5rem;" ng-click="goToAttachmentPage('targetId_1544006481_579', item)" class="btn button button--material">
+                                    <ons-ripple></ons-ripple>
+                                    <i ng-if="!item.vrAttachmentDocument_wait" class="fa fa-upload"></i>
+                                    <i ng-if="item.vrAttachmentDocument_wait" class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                </ons-button>
+                                <ons-button ng-disabled="isReadOnly" style="text-overflow: clip" ng-click="!isReadOnly ? letter.attachmentSet.splice($index, 1) : null" class="btn button button--material">
+                                    <ons-ripple></ons-ripple>
+                                    <i class="fa fa-trash"></i>
+                                </ons-button>
+                            </ons-col>
+                        </ons-row>
+                        <ons-row>
+                            <ons-col class="centerHorVer"
+                                    style="justify-content: right; color: black; background: white; border:1px solid black; white-space: nowrap; border-radius: 3px; border: 1px white outset; margin: 1px; line-height: 2rem;">
+                                <textarea ng-disabled="isReadOnly" ng-model="item.description" rows="1" style="width: 100%;" class="textarea" placeholder="توضیحات"></textarea>                                
+                            </ons-col>
+                        </ons-row>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-bottom: 2rem;" class="rtl centerHorVer">
+                <ons-button ng-disabled="isReadOnly" style="margin-top: 5px; width:95%;" ng-click="!isReadOnly && (letter.attachmentSet[letter.attachmentSet.length - 1].vrAttachmentDocument || !letter.attachmentSet.length) ? letter.attachmentSet.push({}) : null"
+                            class="btn button button--material">
+                            اضافه کردن
+                    <ons-ripple></ons-ripple>
+                    <ons-icon icon="fa-plus"></ons-icon>
+                </ons-button>
+            </div>
+            <div class="rtl centerHorVer">
+                <ons-button style="margin-top: 5px; width:95%;" ng-click="attachmentListModal.hide()"
+                            class="btn button button--material">
+                            بستن
+                    <ons-ripple></ons-ripple>
+                    <ons-icon icon="fa-check"></ons-icon>
+                </ons-button>
+            </div>
+        </div>
+    </ons-modal> 
+
+    <ons-template id="attachmentPage.html">
+        <ons-page>
+            <ons-dialog var="attachDialog" modifier="material" cancelable
+                        posthide="$root.backAttach()" style="display:none">
+                <ons-scroller>
+                    <section>
+                        <section class="custom-box-form" style="margin: 10px !important;">
+                            <h4 style="text-align: right">پیوست فایل PDF</h4>
+                            <div>
+                                <section style="position:relative;">
+                                    <span style="bottom: 15px;text-align: center;top: inherit;right: 10px;width: 44px;border-radius: 100%;color: #fff;left: inherit;display:none"
+                                            ng-hide="newFile" class="dz-remove fa fa-trash removeuRL"
+                                            ng-click="removeImage()">
+                                    </span>
+                                    <ng-dropzone style="margin-top: 0;margin-bottom: 0"
+                                            class="dropzone" options="$root.dzOptions"
+                                            callbacks="$root.dzCallbacks"
+                                            methods="$root.dzMethods">
+                                    </ng-dropzone>
+                                </section>
+                                <section style="display: none;">
+                                <textarea style="height: 37px;margin-top: 10px;"
+                                            ng-model="$root.formData.description" class="textarea"
+                                            rows="3" placeholder="شرح پیوست"></textarea>
+                                </section>
+                            </div>
+                            <div class="rtl">
+                                <ons-button style="margin-top: 5px;" ng-click="$root.backAttach()"
+                                            class="btn button button--material">
+                                    <ons-ripple></ons-ripple>
+                                    <ons-icon icon="fa-angle-left"></ons-icon>
+                                    بازگشت
+                                </ons-button>
+                            </div>
+                        </section>
+                    </section>
+                </ons-scroller>
+            </ons-dialog>
+        </ons-page>
+    </ons-template>
+</div>
+
+<div ui-view="v_attachment"></div>

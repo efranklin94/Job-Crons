@@ -1,0 +1,29 @@
+{
+    "manifest-version": 1,
+    "plugin-version": "0.6.0",
+    "name": "PAT",
+    "developer": { 
+        "name": "Alireza Nikpendar",
+        "email": "a.nikpendar@fanap.ir"
+    },
+    "controllers": [
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/FormattersMap.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/StartableProcessesMap.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/FormKeysMap.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/formatters/letter/LetterCartableFormatter.js"},
+        { "processCode": "PAT_TP_VerifyNewLetter", "schema-version": "1565791020988", "path": "js/plugins/PAT/forms/PAT_TP_VerifyNewLetter/PAT_TP_VerifyNewLetter.js"},
+        { "processCode": "PAT_TP_NewGenerateLetter", "schema-version": "1565791020988", "path": "js/plugins/PAT/forms/PAT_TP_NewGenerateLetter/PAT_TP_NewGenerateLetter.js"},
+        { "processCode": "PAT_TP_SendMessageToSigner", "schema-version": "1565791020988", "path": "js/plugins/PAT/forms/PAT_TP_SendMessageToSigner/PAT_TP_SendMessageToSigner.js"},
+        { "processCode": "PAT_TP_ViewLetter", "schema-version": "1565791020988", "path": "js/plugins/PAT/forms/PAT_TP_ViewLetter/PAT_TP_ViewLetter.js"},
+        { "processCode": "PAT_TP_ViewNewLetter", "schema-version": "1565791020988", "path": "js/plugins/PAT/forms/PAT_TP_ViewNewLetter/PAT_TP_ViewNewLetter.js"},
+        { "processCode": "PAT_TP_VerifyLetter", "schema-version": "1565791020988", "path": "js/plugins/PAT/forms/PAT_TP_VerifyLetter/PAT_TP_VerifyLetter.js"},
+        { "processCode": "PAT_TP_GenerateAndUpdateGroup", "schema-version": "1565791020988", "path": "js/plugins/PAT/forms/PAT_TP_GenerateAndUpdateGroup/PAT_TP_GenerateAndUpdateGroup.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/search-forms/DraftLetterSearch/DraftLetterSearch.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/search-forms/SearchAndViewLetter/SearchAndViewLetter.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/search-forms/ArchivesLettersSearch/ArchivesLettersSearch.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/search-forms/ReceivedLettersSearch/ReceivedLettersSearch.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/search-forms/SentLettersSearch/SentLettersSearch.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/search-forms/LetterSearchBySecretary/LetterSearchBySecretary.js"},
+        { "processCode": null, "schema-version": null, "path": "js/plugins/PAT/search-forms/GroupSearch/GroupSearch.js"}
+    ]
+}

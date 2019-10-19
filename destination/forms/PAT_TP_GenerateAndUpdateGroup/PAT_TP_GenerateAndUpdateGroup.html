@@ -1,0 +1,208 @@
+<link rel="stylesheet" type="text/css" href="js/plugins/PAT/forms/PAT_TP_GenerateAndUpdateGroup/PAT_TP_GenerateAndUpdateGroup.css">
+<div dynamic-ctrl class="custom-css rtl">
+
+    <ons-page>
+        <ons-toolbar style="direction: ltr;">
+            <div class="center" style="text-align: right">{{toolbarTitle}}</div>
+
+            <ons-back-button ng-click="backButton()">Back</ons-back-button>
+
+
+
+            <ons-toolbar-button ng-show="formHasError" style="font-size: 18px;">
+                <ons-icon icon="fa-exclamation-triangle"></ons-icon>
+            </ons-toolbar-button>
+        </ons-toolbar>
+
+        <ons-scroller>
+            <div ng-if="!loaderDestroyed" ng-class="{'hidden-loader-container': !isLoading, 'loader-container': isLoading}" style="position: fixed; width: 100%; height: 100%; z-index: 9000;">
+                <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+            <section class="bgwhite">
+                <div style="padding-bottom:5px">
+
+                    <div style="padding-bottom: 5px;">
+
+                        <section class="custom-box-form">
+                            <div style="border-bottom: solid 1px #fff;">
+                                <div class="centerRightHorVer">
+                                    <i class="fa fa-group pull-right font24 colorPri"></i>
+                                    <h4 class="font13">اطلاعات گروه</h4>
+                                </div>
+                            </div>
+
+                            <ons-row>
+
+
+                                <ons-row class="letter_info_row" style="margin-top: 1rem;">
+                                    <ons-col>
+                                        <label class="font13">عنوان گروه <div style="display: inline; color: red">*</div></label>
+                                        <input type="text" class="text-input" 
+                                                placeholder="عنوان گروه" style="color: black"
+                                                ng-model="group.title"/>
+                                    </ons-col>
+                                </ons-row>
+
+                                <ons-row class="letter_info_row"  
+                                    style="padding-top: 5px; padding-bottom: 5px; margin-top: 1rem;">
+                                        <label class="font13">گیرندگان حقیقی <div style="display: inline; color: red">*</div></label>
+                                        <div class="relative" style="margin-bottom: 10px;">
+                                        <i ng-if="loaders.loadingToPersons"
+                                            style="color:#333;position: absolute;top:10px;left:2.5em;z-index:1000;"
+                                            class="loaderIcon loadingRotate fa fa-spinner">
+                                        </i>
+                                        <div class="customcoverage rightfloat">
+                                            <div ng-hide="isSigned" style="display:table;">
+                                                <tags-input placeholder="گیرندگان حقیقی" ng-model="group.memberSet" 
+                                                            style="padding-left: 0px; padding-right: 0px; display:table-cell;"
+                                                            display-property="title" class="text-input"
+                                                            replace-spaces-with-dashes="false"
+                                                            add-from-autocomplete-only="true"
+                                                            class="text-input">
+                                                    <auto-complete maxTags="-1" ng-disabled="isSigned"
+                                                        source="searchNewPersonTags($query, 'loadingToPersons')"></auto-complete>
+                                                </tags-input>
+                                                <ons-button ng-click="showPersonSearchModal('toPersonSet')"><i class="fa fa-search"></i></ons-button>
+                                            </div>
+                                            <div ng-repeat="item in group.memberSet" class="font13 rtl"
+                                                style="background: #fbfbfb;border: solid 1px #eee;padding: 5px 5px 0 0px; margin-bottom: 0px;">
+                                                <ons-row style="width: 100%;">
+                                                    <ons-col class="centerHorVer"
+                                                        style="justify-content: right;">
+                                                        {{ item.title || (((item.first_name.trim() + " " + item.last_name.trim()) || item.vrPersonValue.trim()) + " " + item.role_title.trim() + " " + item.ou_title.trim())}}                                                                                        
+                                                    </ons-col>
+                                                    <ons-col width="40px" class="centerHorVer">
+                                                        <ons-row>
+                                                            <ons-col ng-if="!isSigned"
+                                                                    ng-click="group.memberSet.splice($index, 1)"
+                                                                    class="centerHorVer font22"
+                                                                    style="height: 31px;color: #666;">
+                                                                <ons-icon icon="ion-ios-trash"></ons-icon>
+                                                            </ons-col>
+                                                        </ons-row>
+                                                    </ons-col>
+                                                </ons-row>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ons-row>
+                            </ons-row>
+                        </section>
+             
+                    </div>
+
+                    <ons-row class="letter_info_row"
+                        style="padding-top: 5px; padding-bottom: 5px; text-align: center">
+                        <ons-col>
+                            <ons-button ng-click="sendForm('SEND')" style="width: 95%">
+                                ارسال
+                            </ons-button>
+                        </ons-col>
+                    </ons-row>
+                </div>
+            </section>
+
+        </ons-scroller>
+
+    </ons-page>
+
+    <ons-modal var="searchPersonModal" dir="rtl" style="background-color:rgba(0,0,0,0.9)">
+        <div style="display:flex; flex-direction: column; height: 100%;">
+            <fieldset>
+                <legend><b>جستجوی اشخاص حقیقی</b></legend>
+                <table style="width: 100%">
+                    <tr>
+                        <td>
+                            <label class="font13">نام</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="personSearch_firstname" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label class="font13">نام خانوادگی</label>
+                        </td>
+                        <td>
+                            <div class="text-coverage">
+                                <input ng-model="personSearch_lastname" type="text"  class="text-input">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+
+                        </td>
+                        <td>
+                            <div>
+                                <ons-button style="width: 100%;" 
+                                    ng-click="searchPersonForModal(personSearch_firstname, personSearch_lastname, 'loadingPersons')">
+                                    جستجو 
+                                    <i ng-if="!loaders.loadingPersons" class="fa fa-search"></i>
+                                    <i ng-if="loaders.loadingPersons"
+                                        style="color:rgb(255, 255, 255);"
+                                        class="loaderIcon loadingRotate fa fa-spinner"></i>
+                                </ons-button>
+                            </div>    
+                        </td>
+                    </tr>
+                </table>
+            </fieldset>
+            <fieldset style="flex:auto; max-width: 100vw;">
+                <legend><b>نتایج جستجو</b></legend>
+                <table style="width: 100%">
+                    <tr >
+                        
+                    </tr>
+                    <tr>
+                        <ons-row ng-hide="!modalPersonSearchResultArray.length"
+                                style="width: 100%; margin-bottom: 5px;">
+                            <ons-col class="centerHorVer font13"
+                                    style="justify-content: right; color: white;">
+                                نام
+                            </ons-col>
+                            <ons-col class="centerHorVer font13"
+                                    style="justify-content: center; color: white;">
+                                نام خانوادگی
+                            </ons-col>
+                            <ons-col class="centerHorVer font13"
+                                    style="justify-content: left; color: white;">
+                                نقش
+                            </ons-col>
+                        </ons-row>
+                        <div style="max-height:40vh; max-width: 100%; overflow:scroll;" scroll-bottom="searchPersonForModal(personSearch_firstname, personSearch_lastname, 'loadingPersons', modalPersonSearchResultArray.length-1)">
+                            <div ng-repeat="item in modalPersonSearchResultArray track by $index"
+                                ng-click="selectPersonFromSearchModal(item)"
+                                class="font13 rtl">
+                                <ons-row style="max-width: 90vw; line-height: 3rem;">
+                                    <ons-col class="centerHorVer"
+                                            style="justify-content: right; color: black; background: white; border:1px solid black; white-space: nowrap; border-bottom-right-radius: 5px; border-top-right-radius: 5px; padding-right: 1rem;">
+                                        {{item.first_name}}
+                                    </ons-col>
+                                    <ons-col class="centerHorVer"
+                                            style="justify-content: center; color: black; background: white; border:1px solid black; white-space: nowrap;">
+                                        {{item.last_name}}
+                                    </ons-col>
+                                    <ons-col class="centerHorVer"
+                                            style="justify-content: left; color: black; background: white; border:1px solid black; overflow:scroll; text-overflow:ellipsis; white-space: nowrap; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                        {{item.role_title}}
+                                    </ons-col>
+                                </ons-row>
+                            </div>
+                        </div>
+                    </tr>
+                </table>
+            </fieldset>
+            <div>
+                <ons-button style="width: 95%; margin-top: 5px; margin-bottom: 15px;" ng-click="searchPersonModal.hide()">
+                    بازگشت
+                </ons-button>
+            </div>
+        </div>
+    </ons-modal>
+</div>
+
+<div ui-view="v_attachment"></div>
+<div ui-view="v_modal"></div>

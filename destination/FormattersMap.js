@@ -1,0 +1,11 @@
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_GenerateLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_RegisterOutgoingLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_GenerateByDraft"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_GenerateRelatedLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_CopyLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_SubmitDraftLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_ViewLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_VerifyNewLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_SendMessageToSigner"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_VerifyLetter"] = "LetterCartableFormatter";
+PluginManager.plugins.GetFormatter.formKey2FormNameMap["PAT_TP_NewGenerateLetter"] = "LetterCartableFormatter";

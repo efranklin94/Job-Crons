@@ -1,0 +1,56 @@
+<div dynamic-ctrl style="margin-bottom: 10px !important;">
+    <button ng-click="$root.popTest.show($event)" class="pull-left font22"
+            style="z-index:99999999999;color: #9c9c9c; width: 40px;text-align: left;height: 50px;position: absolute;left: 15px;bottom: 10px;background: none;border: none">
+        <ons-icon icon="ion-android-more-vertical"></ons-icon>
+    </button>
+    <div class="custom-item-list" ng-click="continueProcessBTN()">
+        <div class="sideColor {{sideColor}}"></div>
+        <section class="full-width custom-section">
+
+            <!-- <i ng-show="isApprove" class="fa centerHorVer" style="display:block">
+                <img style="width:60%;margin: 2px 0 0 0;" src="img/sadereh.png" />
+                <div style="font-size: 8px;">صادره</div>
+            </i>
+            <i ng-hide="isApprove" class="fa fa-sign-in centerHorVer"></i> -->
+            <div>
+                <h4>{{cartableItems.bundledProcessName}}</h4>
+                <span class="pull-left font10 centerHorVer" style="align-items: left;font-size: 9px !important;">{{cartableItems.JstartTime}}
+                <!-- <b ng-hide="read" class="fa" style="height: 12px;width: 12px;background: #339958;border-radius: 100%;color:#000 !important"></b>
+                <b ng-hide="!read" class="fa fa-clock-o"></b> -->
+            </span>
+            </div>
+            <h5>{{toPerson}}</h5>
+            <h6>{{ccPersonSet}}</h6>
+        </section>
+        <section class="full-width custom-icon-section slidesection">
+
+            <div ng-click="slidetoggle = !slidetoggle" class="centerRightHorVer">
+                <i ng-class="{'ion-ios-arrow-up': slidetoggle}" class="fa ion-ios-arrow-down pull-right font24"></i>
+            </div>
+            <!-- <b ng-show="isAttach == 'true'" class="fa fa-paperclip pull-left"></b> -->
+            <div ng-show="slidetoggle" style="height: 45px;">
+                <div ng-repeat="item in cartableItems.cardtableDataVoList track by $index" class="font11">
+
+                    <ons-col width="49%" style="float:right;" ng-show="item.key == 'letterSubject'"><ons-icon icon="fa-pencil-square-o"></ons-icon> موضوع : {{item.content}}</ons-col>
+                    <ons-col width="49%" style="float:left;text-align: right" ng-show="item.key == 'fromPerson'"><ons-icon icon="fa-user"></ons-icon> از طرف : {{item.content}}</ons-col>
+                    <ons-col width="100%" style="float:left;text-align: right" ng-show="item.key == 'letterNo'"><ons-icon icon="ion-card"></ons-icon> شماره : {{item.content}}</ons-col>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <ons-template id="LetterTypepopover.html">
+        <ons-popover cancelable direction="right" animation="fade-ios" modifier="material" >
+            <ons-list class="rtl">
+                <ons-list-item ng-click="$root.createRelatedLetter(item)" modifier="tappable" ng-repeat="item in subProcessList track by $index">
+                    <div style="padding: 0 10px !important;">
+                        <ons-icon icon="fa-angle-left"></ons-icon>
+                        {{item.bundleNodeName}}
+                    </div>
+                </ons-list-item>
+
+            </ons-list>
+        </ons-popover>
+    </ons-template>
+</div>
