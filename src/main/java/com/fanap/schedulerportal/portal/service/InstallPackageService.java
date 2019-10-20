@@ -15,10 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.UUID;
+import java.util.*;
 import java.io.FileReader;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,6 +26,8 @@ import org.json.simple.parser.*;
 public class InstallPackageService {
     @Autowired
     private InstallPackageRepository installPackageRepository;
+    @Autowired
+    private PluginModuleService pluginModuleService;
 
     private static final String UNZIPPINGPATH = "c://destination";
 
@@ -62,16 +62,35 @@ public class InstallPackageService {
 
     public void mapManifestJSONToObject() {
         try {
-            Object obj = new JSONParser().parse(new FileReader(UNZIPPINGPATH + "//plugin.manifest.json"));
+            Object obj = new JSONParser().parse(new FileReader(UNZIPPINGPATH + "//plugins-index.manifest.json"));
             JSONObject jo = (JSONObject) obj;
-            System.out.println(jo);
+
+            JSONObject packageNameObject = (JSONObject) jo.get("app");
+            String packageName = (String) packageNameObject.get("name");
+
             InstallPackage installPackage = new InstallPackage();
-            installPackage.setPackageName((String) jo.get("name"));
+            List<PluginModule> pluginModules = new ArrayList<>();
+
+            installPackage.setPackageName(packageName);
 //            installPackage.setFileLocation();
+//
             Instant instant = Instant.now();
             installPackage.setCreationDate(instant.getEpochSecond());
+
+
+            JSONArray pluginsObject = (JSONArray) jo.get("plugins");
+            for (int i = 0; i < pluginsObject.size(); i++) {
+                JSONObject object = (JSONObject) pluginsObject.get(i);
+                PluginModule pluginModule = new PluginModule();
+                pluginModule.setPluginName((String) object.get("name"));
+                pluginModule.setPluginVersion((String) object.get("version-stable"));
+                pluginModuleService.savePlugin(pluginModule);
+                pluginModules.add(pluginModule);
+            }
+
+            installPackage.setPluginModules(pluginModules);
             installPackageRepository.save(installPackage);
-            installPackageRepository.findAll().forEach(System.out::println);
+//            installPackageRepository.findAll().forEach(System.out::println);
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
@@ -82,7 +101,6 @@ public class InstallPackageService {
     public void deleteTmpFolder() {
         File index = new File(UNZIPPINGPATH);
         deleteDirectory(index);
-
     }
 
     public boolean deleteDirectory(File directoryToBeDeleted) {

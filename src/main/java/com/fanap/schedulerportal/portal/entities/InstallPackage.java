@@ -53,6 +53,14 @@ public class InstallPackage extends BaseEntity<Long> {
         this.fileLocation = fileLocation;
     }
 
+    public List<PluginModule> getPluginModules() {
+        return pluginModules;
+    }
+
+    public void setPluginModules(List<PluginModule> pluginModules) {
+        this.pluginModules = pluginModules;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
