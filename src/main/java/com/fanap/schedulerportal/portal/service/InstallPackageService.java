@@ -60,7 +60,7 @@ public class InstallPackageService {
         }
     }
 
-    public void mapManifestJSONToObject() {
+    public void mapPackageManifestJSONToObject() {
         try {
             Object obj = new JSONParser().parse(new FileReader(UNZIPPINGPATH + "//plugins-index.manifest.json"));
             JSONObject jo = (JSONObject) obj;
@@ -95,6 +95,8 @@ public class InstallPackageService {
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
+
+
 
     }
 

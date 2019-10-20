@@ -3,6 +3,7 @@ package com.fanap.schedulerportal.portal.controller;
 import com.fanap.schedulerportal.portal.entities.InstallPackage;
 import com.fanap.schedulerportal.portal.repository.InstallPackageRepository;
 import com.fanap.schedulerportal.portal.service.InstallPackageService;
+import com.fanap.schedulerportal.portal.service.PluginModuleService;
 import net.lingala.zip4j.core.ZipFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,8 @@ import java.util.Iterator;
 public class InstallPackageController {
     @Autowired
     private InstallPackageService installPackageService;
+    @Autowired
+    protected PluginModuleService pluginModuleService;
 
     @PostMapping("/")
     public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes) {
@@ -33,7 +36,8 @@ public class InstallPackageController {
         installPackageService.unzipFileFromTmpFolder(zip);
         /*zip extracted to destination folder*/
 
-        installPackageService.mapManifestJSONToObject();
+        installPackageService.mapPackageManifestJSONToObject();
+        pluginModuleService.mapPluginsJSONToObject();
 
         return "installPackages/add-installPackage";
     }

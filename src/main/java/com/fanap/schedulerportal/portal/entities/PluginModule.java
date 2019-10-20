@@ -1,6 +1,7 @@
 package com.fanap.schedulerportal.portal.entities;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -14,16 +15,18 @@ public class PluginModule {
     private String pluginName;
     @Column
     private String pluginVersion;
-    @Column
-    private String schemaVersion;
 
-    public PluginModule(String pluginName, String pluginVersion, String schemaVersion) {
-        this.pluginName = pluginName;
-        this.pluginVersion = pluginVersion;
-        this.schemaVersion = schemaVersion;
-    }
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "FORM_FK")
+    private List<Form> forms;
 
     public PluginModule() {
+    }
+
+    public PluginModule(String pluginName, String pluginVersion, List<Form> forms) {
+        this.pluginName = pluginName;
+        this.pluginVersion = pluginVersion;
+        this.forms = forms;
     }
 
     public Long getId() {
@@ -50,12 +53,12 @@ public class PluginModule {
         this.pluginVersion = pluginVersion;
     }
 
-    public String getSchemaVersion() {
-        return schemaVersion;
+    public List<Form> getForms() {
+        return forms;
     }
 
-    public void setSchemaVersion(String schemaVersion) {
-        this.schemaVersion = schemaVersion;
+    public void setForms(List<Form> forms) {
+        this.forms = forms;
     }
 
     @Override
@@ -66,12 +69,12 @@ public class PluginModule {
         return Objects.equals(id, that.id) &&
                 Objects.equals(pluginName, that.pluginName) &&
                 Objects.equals(pluginVersion, that.pluginVersion) &&
-                Objects.equals(schemaVersion, that.schemaVersion);
+                Objects.equals(forms, that.forms);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pluginName, pluginVersion, schemaVersion);
+        return Objects.hash(id, pluginName, pluginVersion, forms);
     }
 
     @Override
@@ -80,7 +83,7 @@ public class PluginModule {
                 "id=" + id +
                 ", pluginName='" + pluginName + '\'' +
                 ", pluginVersion='" + pluginVersion + '\'' +
-                ", schemaVersion='" + schemaVersion + '\'' +
+                ", forms=" + forms +
                 '}';
     }
 }
