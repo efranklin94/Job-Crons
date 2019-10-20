@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "NOTIFIERDESCRIPTOR_TABLE")
-public class NoitifierDescriptor extends BaseEntity<Long> {
+public class NotifierDescriptor extends BaseEntity<Long> {
     @Id
     @SequenceGenerator(name = "NOTIFIERDESCRIPTOR_SEQUENCE", sequenceName = "NOTIFIERDESCRIPTOR_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "NOTIFIERDESCRIPTOR_SEQUENCE")
@@ -26,7 +26,7 @@ public class NoitifierDescriptor extends BaseEntity<Long> {
     @JoinColumn(name = "WARNING_FK")
     private List<Warning> warnings;
 
-    public NoitifierDescriptor(String mmpServerAddress, boolean cronTrigger, boolean created, String lastLaunchTime, Long jobId, List<Warning> warnings) {
+    public NotifierDescriptor(String mmpServerAddress, boolean cronTrigger, boolean created, String lastLaunchTime, Long jobId, List<Warning> warnings) {
         this.mmpServerAddress = mmpServerAddress;
         this.cronTrigger = cronTrigger;
         this.created = created;
@@ -35,7 +35,7 @@ public class NoitifierDescriptor extends BaseEntity<Long> {
         this.warnings = warnings;
     }
 
-    public NoitifierDescriptor() {
+    public NotifierDescriptor() {
     }
 
     public Long getId() {
@@ -98,7 +98,7 @@ public class NoitifierDescriptor extends BaseEntity<Long> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        NoitifierDescriptor that = (NoitifierDescriptor) o;
+        NotifierDescriptor that = (NotifierDescriptor) o;
         return cronTrigger == that.cronTrigger &&
                 created == that.created &&
                 Objects.equals(id, that.id) &&
