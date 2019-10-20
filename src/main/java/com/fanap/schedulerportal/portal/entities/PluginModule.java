@@ -20,13 +20,18 @@ public class PluginModule {
     @JoinColumn(name = "FORM_FK")
     private List<Form> forms;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "NOTIFYMEDIA_FK")
+    private NotifyMedia notifyMedia;
+
     public PluginModule() {
     }
 
-    public PluginModule(String pluginName, String pluginVersion, List<Form> forms) {
+    public PluginModule(String pluginName, String pluginVersion, List<Form> forms, NotifyMedia notifyMedia) {
         this.pluginName = pluginName;
         this.pluginVersion = pluginVersion;
         this.forms = forms;
+        this.notifyMedia = notifyMedia;
     }
 
     public Long getId() {
@@ -69,12 +74,13 @@ public class PluginModule {
         return Objects.equals(id, that.id) &&
                 Objects.equals(pluginName, that.pluginName) &&
                 Objects.equals(pluginVersion, that.pluginVersion) &&
-                Objects.equals(forms, that.forms);
+                Objects.equals(forms, that.forms) &&
+                Objects.equals(notifyMedia, that.notifyMedia);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, pluginName, pluginVersion, forms);
+        return Objects.hash(id, pluginName, pluginVersion, forms, notifyMedia);
     }
 
     @Override
@@ -84,6 +90,15 @@ public class PluginModule {
                 ", pluginName='" + pluginName + '\'' +
                 ", pluginVersion='" + pluginVersion + '\'' +
                 ", forms=" + forms +
+                ", notifyMedia=" + notifyMedia +
                 '}';
+    }
+
+    public NotifyMedia getNotifyMedia() {
+        return notifyMedia;
+    }
+
+    public void setNotifyMedia(NotifyMedia notifyMedia) {
+        this.notifyMedia = notifyMedia;
     }
 }

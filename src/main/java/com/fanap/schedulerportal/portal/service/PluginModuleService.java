@@ -2,6 +2,7 @@ package com.fanap.schedulerportal.portal.service;
 
 import com.fanap.schedulerportal.portal.entities.Form;
 import com.fanap.schedulerportal.portal.entities.InstallPackage;
+import com.fanap.schedulerportal.portal.entities.NotifyMedia;
 import com.fanap.schedulerportal.portal.entities.PluginModule;
 import com.fanap.schedulerportal.portal.repository.FormRepository;
 import com.fanap.schedulerportal.portal.repository.InstallPackageRepository;
@@ -22,14 +23,16 @@ import java.util.List;
 public class PluginModuleService {
     private FormService formService;
     private PluginModuleRepository pluginModuleRepository;
+    private NotifyMediaService notifyMediaService;
 
     private static final String UNZIPPINGPATH = "c://destination";
 //    private static final String PLUGINMODULEPATH = "c://destination/";
 
     @Autowired
-    public PluginModuleService(PluginModuleRepository pluginModuleRepository, FormService formService) {
+    public PluginModuleService(PluginModuleRepository pluginModuleRepository, FormService formService, NotifyMediaService notifyMediaService) {
         this.pluginModuleRepository = pluginModuleRepository;
         this.formService = formService;
+        this.notifyMediaService = notifyMediaService;
     }
 
 
@@ -64,6 +67,11 @@ public class PluginModuleService {
                     formService.saveForm(form);
                     forms.add(form);
                 }
+
+                JSONObject developerInfo = (JSONObject) jo2.get("developer");
+                NotifyMedia notifyMedia = new NotifyMedia((String) developerInfo.get("email"));
+                pluginModule.setNotifyMedia(notifyMedia);
+                notifyMediaService.saveNotifyMedia(notifyMedia);
             }
 
             pluginModule.setForms(forms);
