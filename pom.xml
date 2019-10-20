@@ -101,20 +101,23 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.197</version>
-            <scope>runtime</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.h2database</groupId>-->
+<!--            <artifactId>h2</artifactId>-->
+<!--            <version>1.4.197</version>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
 
 
         <!-- Oracle JDBC driver -->
+        <!-- https://mvnrepository.com/artifact/com.oracle/ojdbc8 -->
 <!--        <dependency>-->
-<!--            <groupId>oracle</groupId>-->
+<!--            <groupId>com.oracle</groupId>-->
 <!--            <artifactId>ojdbc8</artifactId>-->
 <!--            <version>12.2.0.1</version>-->
+<!--            <scope>provided</scope>-->
 <!--        </dependency>-->
+
 <!--        <dependency>-->
 <!--            <groupId>oracle</groupId>-->
 <!--            <artifactId>ojdbc6</artifactId>-->
