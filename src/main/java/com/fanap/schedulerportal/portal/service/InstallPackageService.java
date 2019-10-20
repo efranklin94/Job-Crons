@@ -29,7 +29,7 @@ public class InstallPackageService {
     @Autowired
     private InstallPackageRepository installPackageRepository;
 
-    private static final String UNZIPPINGPATH = "destination";
+    private static final String UNZIPPINGPATH = "c://destination";
 
     public InstallPackage saveInstallPackageBundle(InstallPackage installPackage) {
         return installPackageRepository.save(installPackage);
