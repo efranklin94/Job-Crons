@@ -20,11 +20,9 @@ public class InstallPackage extends BaseEntity<Long> {
     @JoinColumn(name = "PLUGINMODULE_FK")
     private List<PluginModule> pluginModules;
 
-    public InstallPackage(String packageName, String fileLocation, List<PluginModule> pluginModules) {
-        this.packageName = packageName;
-        this.fileLocation = fileLocation;
-        this.pluginModules = pluginModules;
-    }
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "NOTIFIERDESCRIPTOR_FK")
+    private NotifierDescriptor descriptor;
 
     public InstallPackage() {
     }
@@ -62,6 +60,17 @@ public class InstallPackage extends BaseEntity<Long> {
     }
 
     @Override
+    public String toString() {
+        return "InstallPackage{" +
+                "id=" + id +
+                ", packageName='" + packageName + '\'' +
+                ", fileLocation='" + fileLocation + '\'' +
+                ", pluginModules=" + pluginModules +
+                ", descriptor=" + descriptor +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -69,21 +78,27 @@ public class InstallPackage extends BaseEntity<Long> {
         return Objects.equals(id, that.id) &&
                 Objects.equals(packageName, that.packageName) &&
                 Objects.equals(fileLocation, that.fileLocation) &&
-                Objects.equals(pluginModules, that.pluginModules);
+                Objects.equals(pluginModules, that.pluginModules) &&
+                Objects.equals(descriptor, that.descriptor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, packageName, fileLocation, pluginModules);
+        return Objects.hash(id, packageName, fileLocation, pluginModules, descriptor);
     }
 
-    @Override
-    public String toString() {
-        return "InstallPackage{" +
-                "id=" + id +
-                ", packageName='" + packageName + '\'' +
-                ", fileLocation='" + fileLocation + '\'' +
-                ", pluginModules=" + pluginModules +
-                '}';
+    public NotifierDescriptor getNotifierDescriptor() {
+        return descriptor;
+    }
+
+    public void setNotifierDescriptor(NotifierDescriptor descriptor) {
+        this.descriptor = descriptor;
+    }
+
+    public InstallPackage(String packageName, String fileLocation, List<PluginModule> pluginModules, NotifierDescriptor descriptor) {
+        this.packageName = packageName;
+        this.fileLocation = fileLocation;
+        this.pluginModules = pluginModules;
+        this.descriptor = descriptor;
     }
 }

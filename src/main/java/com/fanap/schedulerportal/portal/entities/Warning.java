@@ -16,6 +16,7 @@ public class Warning extends BaseEntity<Long> {
     @Column
     private String warningText;
 
+
     public Warning(Long warningTime, String warningText) {
         this.warningTime = warningTime;
         this.warningText = warningText;

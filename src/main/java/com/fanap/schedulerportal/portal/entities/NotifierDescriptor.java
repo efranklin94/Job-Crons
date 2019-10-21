@@ -26,13 +26,22 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     @JoinColumn(name = "WARNING_FK")
     private List<Warning> warnings;
 
-    public NotifierDescriptor(String mmpServerAddress, boolean cronTrigger, boolean created, String lastLaunchTime, Long jobId, List<Warning> warnings) {
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ENABLED_MEDIA")
+    private NotifyMedia enabledMedia;
+
+    @OneToOne(mappedBy = "descriptor")
+    private InstallPackage installPackage;
+
+
+    public NotifierDescriptor(String mmpServerAddress, boolean cronTrigger, boolean created, String lastLaunchTime, Long jobId, List<Warning> warnings, NotifyMedia enabledMedia) {
         this.mmpServerAddress = mmpServerAddress;
         this.cronTrigger = cronTrigger;
         this.created = created;
         this.lastLaunchTime = lastLaunchTime;
         this.jobId = jobId;
         this.warnings = warnings;
+        this.enabledMedia = enabledMedia;
     }
 
     public NotifierDescriptor() {
@@ -94,6 +103,28 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         this.warnings = warnings;
     }
 
+    public NotifyMedia getEnabledMedia() {
+        return enabledMedia;
+    }
+
+    public void setEnabledMedia(NotifyMedia enabledMedia) {
+        this.enabledMedia = enabledMedia;
+    }
+
+    @Override
+    public String toString() {
+        return "NotifierDescriptor{" +
+                "id=" + id +
+                ", mmpServerAddress='" + mmpServerAddress + '\'' +
+                ", cronTrigger=" + cronTrigger +
+                ", created=" + created +
+                ", lastLaunchTime='" + lastLaunchTime + '\'' +
+                ", jobId=" + jobId +
+                ", warnings=" + warnings +
+                ", enabledMedia=" + enabledMedia +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,24 +136,12 @@ public class NotifierDescriptor extends BaseEntity<Long> {
                 Objects.equals(mmpServerAddress, that.mmpServerAddress) &&
                 Objects.equals(lastLaunchTime, that.lastLaunchTime) &&
                 Objects.equals(jobId, that.jobId) &&
-                Objects.equals(warnings, that.warnings);
+                Objects.equals(warnings, that.warnings) &&
+                Objects.equals(enabledMedia, that.enabledMedia);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mmpServerAddress, cronTrigger, created, lastLaunchTime, jobId, warnings);
-    }
-
-    @Override
-    public String toString() {
-        return "NoitifierDescriptor{" +
-                "id=" + id +
-                ", mmpServerAddress='" + mmpServerAddress + '\'' +
-                ", cronTrigger=" + cronTrigger +
-                ", created=" + created +
-                ", lastLaunchTime='" + lastLaunchTime + '\'' +
-                ", jobId=" + jobId +
-                ", warnings=" + warnings +
-                '}';
+        return Objects.hash(id, mmpServerAddress, cronTrigger, created, lastLaunchTime, jobId, warnings, enabledMedia);
     }
 }

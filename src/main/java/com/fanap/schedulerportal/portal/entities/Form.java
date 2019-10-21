@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table
+@Table(name = "FORM_TABLE")
 public class Form {
     @Id
     @SequenceGenerator(name = "FORM_SEQUENCE", sequenceName = "FORM_SEQUENCE", allocationSize = 1)
@@ -14,6 +14,10 @@ public class Form {
     private String processCode;
     @Column
     private String schemaVersion;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "CONFLICT_FK")
+    private Warning conflict;
 
     public Form(String processCode, String schemaVersion) {
         this.processCode = processCode;

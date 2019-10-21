@@ -41,7 +41,8 @@ public class InstallPackageController {
 
         installPackageService.mapPackageManifestJSONToObject();
         pluginModuleService.mapPluginsJSONToObject();
-        cronJobSch();
+//        cronJobSch();
+
         return "installPackages/add-installPackage";
     }
 
@@ -50,14 +51,18 @@ public class InstallPackageController {
         return "installPackages/home";
     }
 
-    @Scheduled(cron = "*/5 * * * * *")
-    public void cronJobSch() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        Date now = new Date();
-        String strDate = sdf.format(now);
-        System.out.println("Java cron job expression:: " + strDate);
-    }
+//    @Scheduled(cron = "*/5 * * * * *")
+//    public void cronJobSch() {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+//        Date now = new Date();
+//        String strDate = sdf.format(now);
+//        System.out.println("Java cron job expression:: " + strDate);
+//    }
 
-
+//    @Scheduled(fixedRate = 1000)
+//    public void scheduleFixedRateTask() {
+//        System.out.println(
+//                "Fixed rate task - " + System.currentTimeMillis() / 1000);
+//    }
 
 }
