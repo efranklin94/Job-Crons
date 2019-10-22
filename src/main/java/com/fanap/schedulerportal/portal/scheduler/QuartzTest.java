@@ -5,6 +5,9 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
+
+import java.util.Date;
+
 import static org.quartz.JobBuilder.*;
 import static org.quartz.TriggerBuilder.*;
 import static org.quartz.SimpleScheduleBuilder.*;
@@ -19,31 +22,29 @@ public class QuartzTest {
             // and start it off
             scheduler.start();
 
-//            HelloQuartz HelloQuartz = new HelloQuartz();
-            setRepetitiveTask(HelloJob.class, scheduler);
-//            System.out.println(typeof(test.class));
+            setRepetitiveTask(HelloJob.class, scheduler, 4, 1571724869770L, 1571724879770L);
 
-
-            scheduler.shutdown();
 
         } catch (SchedulerException se) {
             se.printStackTrace();
         }
     }
 
-    public static void setRepetitiveTask(Class repetitiveTask, Scheduler scheduler) throws SchedulerException {
+    public static void setRepetitiveTask(Class repetitiveTask, Scheduler scheduler, int hour, Long startDate, Long endDate) throws SchedulerException {
         // define the job and tie it to our HelloJob class
         JobDetail job = newJob(repetitiveTask)
                 .withIdentity("job1", "group1")
+                .usingJobData("eddy","1")
                 .build();
 
-        // Trigger the job to run now, and then repeat every 40 seconds
         Trigger trigger = newTrigger()
                 .withIdentity("trigger1", "group1")
-                .startNow()
+                .startAt(new Date(startDate))
+
                 .withSchedule(simpleSchedule()
-                        .withIntervalInSeconds(3)
+                        .withIntervalInSeconds(hour)
                         .repeatForever())
+                .endAt(new Date(endDate))
                 .build();
 
         // Tell quartz to schedule the job using our trigger

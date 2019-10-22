@@ -13,6 +13,7 @@ public class HelloJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         JobDataMap data = jobExecutionContext.getMergedJobDataMap();
-        System.out.println("someProp = " + data.getString("someProp"));
+//        data.put("eddy","1");
+        System.out.println("eddy = " + data.getString("eddy"));
     }
 }
