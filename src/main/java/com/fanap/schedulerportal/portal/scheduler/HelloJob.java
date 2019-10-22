@@ -8,12 +8,13 @@ import org.quartz.JobExecutionException;
 public class HelloJob implements Job {
 
     public HelloJob() {
+        System.out.println("hi im created");
     }
 
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
-        JobDataMap data = jobExecutionContext.getMergedJobDataMap();
+//        JobDataMap data = jobExecutionContext.getMergedJobDataMap();
 //        data.put("eddy","1");
-        System.out.println("eddy = " + data.getString("eddy"));
+//        System.out.println("eddy = " + data.getString("eddy"));
     }
 }

@@ -22,7 +22,7 @@ public class QuartzTest {
             // and start it off
             scheduler.start();
 
-            setRepetitiveTask(HelloJob.class, scheduler, 4, 1571724869770L, 1571724879770L);
+            setRepetitiveTask(HelloJob.class, scheduler, 4, 1571728112999L, 1571729112999L);
 
 
         } catch (SchedulerException se) {
@@ -31,12 +31,11 @@ public class QuartzTest {
     }
 
     public static void setRepetitiveTask(Class repetitiveTask, Scheduler scheduler, int hour, Long startDate, Long endDate) throws SchedulerException {
-        // define the job and tie it to our HelloJob class
         JobDetail job = newJob(repetitiveTask)
                 .withIdentity("job1", "group1")
-                .usingJobData("eddy","1")
+//                .usingJobData("eddy","1")
                 .build();
-
+/******************************************************************/
         Trigger trigger = newTrigger()
                 .withIdentity("trigger1", "group1")
                 .startAt(new Date(startDate))
@@ -44,10 +43,10 @@ public class QuartzTest {
                 .withSchedule(simpleSchedule()
                         .withIntervalInSeconds(hour)
                         .repeatForever())
+
                 .endAt(new Date(endDate))
                 .build();
-
-        // Tell quartz to schedule the job using our trigger
+/*******************************************************************/
         scheduler.scheduleJob(job, trigger);
     }
 
