@@ -1,0 +1,21 @@
+-- -- CREATING SEQUENCES
+-- create sequence baseentity_sequence start with 1 increment by  1;
+-- create sequence notifymedia_sequence start with 1 increment by  1;
+-- create sequence pluginmodule_sequence start with 1 increment by  1;
+-- create sequence user_sequence start with 1 increment by  1;
+-- -- CREATING TABLES
+-- create table baseentity_table (id number(19,0) not null, update_time varchar2(255 char), creation_time varchar2(255 char), primary key (id));
+-- create table installpackage_table (file_location varchar2(255 char), package_name varchar2(255 char), id number(19,0) not null, primary key (id));
+-- create table notifierdescriptor_table (created number(1,0), cron_trigger number(1,0), job_id number(19,0), last_launch_time varchar2(255 char), mmp_server_address varchar2(255 char), id number(19,0) not null, primary key (id));
+-- create table notifymedia_table (id number(19,0) not null, media_name varchar2(255 char), primary key (id));
+-- create table pluginmodule_table (id number(19,0) not null, plugin_name varchar2(255 char), plugin_version varchar2(255 char), schema_version varchar2(255 char), pluginmodule_fk number(19,0), primary key (id));
+-- create table role_table (role_name varchar2(255 char), id number(19,0) not null, role_fk number(19,0), primary key (id));
+-- create table user_table (id number(19,0) not null, email varchar2(255 char), firstname varchar2(255 char), lastname varchar2(255 char), password varchar2(255 char), username varchar2(255 char), primary key (id));
+-- create table warning_table (warning_text varchar2(255 char), warning_time number(19,0), id number(19,0) not null, warning_fk number(19,0), primary key (id));
+-- -- ALTER COMMANDS
+-- alter table installpackage_table add constraint FKk87yr8ywbq3f53ksj1a95wad9 foreign key (id) references baseentity_table;
+-- alter table notifierdescriptor_table add constraint FK85s56p7dmdko4dw6y2ln35fcg foreign key (id) references baseentity_table;
+-- alter table pluginmodule_table add constraint FK4y3sgtevnkpxidwgbonl97p2p foreign key (pluginmodule_fk) references installpackage_table;
+-- alter table role_table add constraint FKqfpyffh4xosumlcgw2rvbemto foreign key (id) references baseentity_table;
+-- alter table warning_table add constraint FK9t4eshnwgo1uld3xfqumpljp9 foreign key (id) references baseentity_table;
+-- alter table warning_table add constraint FKqsrmokn3yjdwu8u50pmqcdmnq foreign key (warning_fk) references notifierdescriptor_table;
