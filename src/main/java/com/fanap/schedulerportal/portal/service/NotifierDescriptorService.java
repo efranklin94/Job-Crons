@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 public class NotifierDescriptorService {
     @Autowired
     private NotifierDescriptorRepository notifierDescriptorRepository;
-    @Autowired
-    private Scheduler scheduler;
-
-    public void ScheduleJob(Long repeatHour, Long startDate, Long endDate, ) {
-
-    }
+//    @Autowired
+//    private Scheduler scheduler;
+//
+//    public void ScheduleJob(Long repeatHour, Long startDate, Long endDate, ) {
+//
+//    }
 }

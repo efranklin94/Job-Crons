@@ -22,7 +22,7 @@ public class QuartzTest {
             // and start it off
             scheduler.start();
 
-            setRepetitiveTask(HelloJob.class, scheduler, 4, 1571728112999L, 1571729112999L);
+            setRepetitiveTask(HelloJob.class, scheduler, 4, System.currentTimeMillis() , System.currentTimeMillis() + 10000L);
 
 
         } catch (SchedulerException se) {
