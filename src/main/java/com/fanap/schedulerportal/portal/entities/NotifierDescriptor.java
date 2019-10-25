@@ -14,8 +14,6 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     @Column
     private String mmpServerAddress;
     @Column
-    private boolean cronTrigger;
-    @Column
     private boolean enabled;
     @Column
     private String lastLaunchTime;
@@ -33,10 +31,13 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     @OneToOne(mappedBy = "descriptor")
     private InstallPackage installPackage;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "TRIGGER_FK")
+    private TriggerVO trigger;
 
-    public NotifierDescriptor(String mmpServerAddress, boolean cronTrigger, boolean enabled, String lastLaunchTime, Long jobId, List<Warning> warnings, NotifyMedia enabledMedia) {
+    public NotifierDescriptor(String mmpServerAddress, TriggerVO trigger, boolean enabled, String lastLaunchTime, Long jobId, List<Warning> warnings, NotifyMedia enabledMedia) {
         this.mmpServerAddress = mmpServerAddress;
-        this.cronTrigger = cronTrigger;
+        this.trigger = trigger;
         this.enabled = enabled;
         this.lastLaunchTime = lastLaunchTime;
         this.jobId = jobId;
@@ -63,12 +64,12 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         this.mmpServerAddress = mmpServerAddress;
     }
 
-    public boolean isCronTrigger() {
-        return cronTrigger;
+    public TriggerVO getTrigger() {
+        return trigger;
     }
 
-    public void setCronTrigger(boolean cronTrigger) {
-        this.cronTrigger = cronTrigger;
+    public void setTrigger(TriggerVO trigger) {
+        this.trigger = trigger;
     }
 
     public boolean isCreated() {
@@ -116,7 +117,7 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         return "NotifierDescriptor{" +
                 "id=" + id +
                 ", mmpServerAddress='" + mmpServerAddress + '\'' +
-                ", cronTrigger=" + cronTrigger +
+                ", trigger=" + trigger +
                 ", enabled=" + enabled +
                 ", lastLaunchTime='" + lastLaunchTime + '\'' +
                 ", jobId=" + jobId +
@@ -130,7 +131,7 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotifierDescriptor that = (NotifierDescriptor) o;
-        return cronTrigger == that.cronTrigger &&
+        return trigger == that.trigger &&
                 enabled == that.enabled &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(mmpServerAddress, that.mmpServerAddress) &&
@@ -142,6 +143,6 @@ public class NotifierDescriptor extends BaseEntity<Long> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mmpServerAddress, cronTrigger, enabled, lastLaunchTime, jobId, warnings, enabledMedia);
+        return Objects.hash(id, mmpServerAddress, trigger, enabled, lastLaunchTime, jobId, warnings, enabledMedia);
     }
 }

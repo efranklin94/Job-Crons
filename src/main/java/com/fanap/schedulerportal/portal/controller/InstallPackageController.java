@@ -1,30 +1,19 @@
 package com.fanap.schedulerportal.portal.controller;
 
 import com.fanap.schedulerportal.portal.entities.InstallPackage;
-import com.fanap.schedulerportal.portal.repository.InstallPackageRepository;
+import com.fanap.schedulerportal.portal.entities.TriggerVO;
+import com.fanap.schedulerportal.portal.repository.TriggerVORepository;
 import com.fanap.schedulerportal.portal.service.InstallPackageService;
 import com.fanap.schedulerportal.portal.service.PluginModuleService;
-import net.lingala.zip4j.core.ZipFile;
-import org.quartz.JobDetail;
-import org.quartz.SimpleScheduleBuilder;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import com.fanap.schedulerportal.portal.service.RecordNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Iterator;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -32,10 +21,10 @@ public class InstallPackageController {
     @Autowired
     private InstallPackageService installPackageService;
     @Autowired
-    protected PluginModuleService pluginModuleService;
+    private PluginModuleService pluginModuleService;
 
     @PostMapping("/addInstallPackage")
-    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes, TriggerVO triggerVO) {
+    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes,@ModelAttribute("trigger") TriggerVO trigger) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
             return "redirect:uploadStatus";
@@ -45,22 +34,37 @@ public class InstallPackageController {
         installPackageService.unzipFileFromTmpFolder(zip);
         /*zip extracted to destination folder*/
 
-        installPackageService.mapPackageManifestJSONToObject();
+        installPackageService.mapPackageManifestJSONToObject(trigger);
         pluginModuleService.mapPluginsJSONToObject();
 //        cronJobSch();
 
-        System.out.println(triggerVO.getStartTime());
-        System.out.println(triggerVO.getEndTime());
-        System.out.println(triggerVO.getRepeatHour());
+        System.out.println(trigger.getStartTime());
+        System.out.println(trigger.getEndTime());
+        System.out.println(trigger.getRepeatHour());
 
-        return "installPackages/add-installPackage";
+        return "redirect:/";
     }
 
     @RequestMapping
-    public String homeInstallPackageController() {
+    public String homeInstallPackageController(Model model) {
+        model.addAttribute("trigger", new TriggerVO());
+        model.addAttribute("packages", installPackageService.getAllPackages());
         return "installPackages/home";
     }
 
+
+    @RequestMapping(path = {"/edit", "/edit/{id}"})
+    public String editInstallPackageById(Model model, @PathVariable("id") Optional<Long> id) throws RecordNotFoundException {
+        if (id.isPresent()) {
+            InstallPackage installPackageEntity = installPackageService.getUserById(id.get());
+            TriggerVO triggerVO = installPackageEntity.getNotifierDescriptor().getTrigger();
+
+            model.addAttribute("trigger", triggerVO);
+        } else {
+            model.addAttribute("trigger", new TriggerVO());
+        }
+        return "installPackages/add-installPackage";
+    }
 //    private Trigger buildJobTrigger(JobDetail jobDetail, Long startAt) {
 //        return TriggerBuilder.newTrigger()
 //                .forJob(jobDetail)

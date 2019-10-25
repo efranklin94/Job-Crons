@@ -23,8 +23,45 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <!--/*@thymesVar id="triggerVO" type="com.fanap.schedulerportal.portal.controller.InstallPackageController"*/-->
-            <form method="POST" enctype="multipart/form-data" th:action="@{/addInstallPackage}" th:object="${triggerVO}">
+            <div th:switch="${packages}" class="container">
+                <a href="/edit" class="btn btn-primary">
+                    <i class="fas fa-plus ml-2">
+                        Add Package
+                    </i>
+                </a>
+                <div class="col-md-10">
+                    <h2 th:case="null">No Record Found...</h2>
+                    <div th:case="*">
+                        <table class="table table-striped table-responsive-md">
+                            <thead>
+                                <tr>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Repeat every desired hour</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="package : ${packages}">
+                                    <td th:text="${package.notifierDescriptor.trigger.startTime}"></td>
+                                    <td th:text="${package.notifierDescriptor.trigger.endTime}"></td>
+                                    <td th:text="${package.notifierDescriptor.trigger.repeatHour}"></td>
+                                    <td>
+                                        <a th:href="@{/edit/{id}(id=${package.id})}" class="btn btn-primary">
+                                            <i class="fas fa-edit ml-2"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/delete/{id}(id=${package.id})}" class="btn vtn btn-primary">
+                                            <i class="fas fa-times ml-2"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <form method="POST" enctype="multipart/form-data" th:action="@{/addInstallPackage}" th:object="${trigger}">
                 <table>
                     <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
                     <tr><td><input type="submit" value="Upload" /></td></tr>
