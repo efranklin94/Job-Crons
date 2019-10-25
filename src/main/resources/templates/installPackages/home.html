@@ -23,7 +23,8 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <form method="POST" enctype="multipart/form-data" th:action="@{/addInstallPackage}">
+            <!--/*@thymesVar id="triggerVO" type="com.fanap.schedulerportal.portal.controller.InstallPackageController"*/-->
+            <form method="POST" enctype="multipart/form-data" th:action="@{/addInstallPackage}" th:object="${triggerVO}">
                 <table>
                     <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
                     <tr><td><input type="submit" value="Upload" /></td></tr>
@@ -32,14 +33,14 @@
                             <div class="form-group">
                                 <div class="form-group row">
                                     <div class="input-group col-md-6">
-                                        <input type="text" class="form-control pickDate" id="fromDate1" placeholder="از تاریخ"  />
+                                        <input type="text" class="form-control pickDate" id="fromDate1" placeholder="از تاریخ" th:field="*{startTime}" />
                                         <div class="input-group-append">
                                             <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>
                                         </div>
                                     </div>
 
                                     <div class="input-group col-md-6">
-                                        <input type="text" class="form-control pickDate" id="toDate1" placeholder="تا تاریخ" />
+                                        <input type="text" class="form-control pickDate" id="toDate1" placeholder="تا تاریخ" th:field="*{endTime}" />
                                         <div class="input-group-append" >
                                             <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>
                                         </div>
@@ -56,7 +57,7 @@
                         <!--                                </div>-->
                         <!--                            </td>-->
                         <td>
-                            <input type="text" th:value="${repeatHour}" class="text-info" placeholder="تکرار" />
+                            <input type="text" th:field="*{repeatHour}" class="text-info" placeholder="تکرار" />
                         </td>
                     </tr>
                 </table>

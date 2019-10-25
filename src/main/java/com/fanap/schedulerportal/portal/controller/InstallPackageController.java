@@ -34,12 +34,8 @@ public class InstallPackageController {
     @Autowired
     protected PluginModuleService pluginModuleService;
 
-    private Long startTime = 0L;
-    private Long endTime = 0L;
-    private int repeatHour = 0;
-
     @PostMapping("/addInstallPackage")
-    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes, Model model) {
+    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes, TriggerVO triggerVO) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
             return "redirect:uploadStatus";
@@ -53,21 +49,15 @@ public class InstallPackageController {
         pluginModuleService.mapPluginsJSONToObject();
 //        cronJobSch();
 
-        System.out.println(startTime);
-        System.out.println(endTime);
-        System.out.println(repeatHour);
+        System.out.println(triggerVO.getStartTime());
+        System.out.println(triggerVO.getEndTime());
+        System.out.println(triggerVO.getRepeatHour());
 
         return "installPackages/add-installPackage";
     }
 
     @RequestMapping
-    public String homeInstallPackageController(Model model) {
-
-
-        model.addAttribute("startTime", startTime.toString());
-        model.addAttribute("endTime", endTime.toString());
-        model.addAttribute("repeatHour", repeatHour);
-
+    public String homeInstallPackageController() {
         return "installPackages/home";
     }
 
