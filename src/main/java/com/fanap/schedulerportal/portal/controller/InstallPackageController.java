@@ -36,11 +36,6 @@ public class InstallPackageController {
 
         installPackageService.mapPackageManifestJSONToObject(trigger);
         pluginModuleService.mapPluginsJSONToObject();
-//        cronJobSch();
-
-        System.out.println(trigger.getStartTime());
-        System.out.println(trigger.getEndTime());
-        System.out.println(trigger.getRepeatHour());
 
         return "redirect:/";
     }

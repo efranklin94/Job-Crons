@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Upload Install Package</title>
+    <title>Install Packages List</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -61,44 +61,44 @@
                     </div>
                 </div>
             </div>
-            <form method="POST" enctype="multipart/form-data" th:action="@{/addInstallPackage}" th:object="${trigger}">
-                <table>
-                    <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
-                    <tr><td><input type="submit" value="Upload" /></td></tr>
-                    <tr>
-                        <td>
-                            <div class="form-group">
-                                <div class="form-group row">
-                                    <div class="input-group col-md-6">
-                                        <input type="text" class="form-control pickDate" id="fromDate1" placeholder="از تاریخ" th:field="*{startTime}" />
-                                        <div class="input-group-append">
-                                            <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>
-                                        </div>
-                                    </div>
+<!--            <form method="POST" enctype="multipart/form-data" th:action="@{/addInstallPackage}" th:object="${trigger}">-->
+<!--                <table>-->
+<!--                    <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>-->
+<!--                    <tr><td><input type="submit" value="Upload" /></td></tr>-->
+<!--                    <tr>-->
+<!--                        <td>-->
+<!--                            <div class="form-group">-->
+<!--                                <div class="form-group row">-->
+<!--                                    <div class="input-group col-md-6">-->
+<!--                                        <input type="text" class="form-control pickDate" id="fromDate1" placeholder="از تاریخ" th:field="*{startTime}" />-->
+<!--                                        <div class="input-group-append">-->
+<!--                                            <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
 
-                                    <div class="input-group col-md-6">
-                                        <input type="text" class="form-control pickDate" id="toDate1" placeholder="تا تاریخ" th:field="*{endTime}" />
-                                        <div class="input-group-append" >
-                                            <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <!--                            <td>-->
-                        <!--                                <div class="input-group col-md-6">-->
-                        <!--                                    <input type="text" th:value="${endTime}" class="form-control pickDate" id="toDate1" placeholder="تا تاریخ" />-->
-                        <!--                                    <div class="input-group-append" >-->
-                        <!--                                        <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>-->
-                        <!--                                    </div>-->
-                        <!--                                </div>-->
-                        <!--                            </td>-->
-                        <td>
-                            <input type="text" th:field="*{repeatHour}" class="text-info" placeholder="تکرار" />
-                        </td>
-                    </tr>
-                </table>
-            </form>
+<!--                                    <div class="input-group col-md-6">-->
+<!--                                        <input type="text" class="form-control pickDate" id="toDate1" placeholder="تا تاریخ" th:field="*{endTime}" />-->
+<!--                                        <div class="input-group-append" >-->
+<!--                                            <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                        &lt;!&ndash;                            <td>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                <div class="input-group col-md-6">&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                    <input type="text" th:value="${endTime}" class="form-control pickDate" id="toDate1" placeholder="تا تاریخ" />&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                    <div class="input-group-append" >&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                        <i class="fa fa-calendar pickDate" aria-hidden="true" style="padding: 5px; margin-top: 5px; color: #0bc1ff"></i>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                            </td>&ndash;&gt;-->
+<!--                        <td>-->
+<!--                            <input type="text" th:field="*{repeatHour}" class="text-info" placeholder="تکرار" />-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                </table>-->
+<!--            </form>-->
         </div>
     </div>
 </div>
