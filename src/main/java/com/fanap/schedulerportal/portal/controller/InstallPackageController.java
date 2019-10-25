@@ -23,16 +23,12 @@ public class InstallPackageController {
     @Autowired
     private PluginModuleService pluginModuleService;
 
-    @PostMapping("/addInstallPackage")
+    @RequestMapping("/addInstallPackage")
     public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes,@ModelAttribute("trigger") TriggerVO trigger) {
-        if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
-            return "redirect:uploadStatus";
-        }
+
         installPackageService.deleteTmpFolder();
         File zip = installPackageService.saveFileToTmpFolder(file);
         installPackageService.unzipFileFromTmpFolder(zip);
-        /*zip extracted to destination folder*/
 
         installPackageService.mapPackageManifestJSONToObject(trigger);
         pluginModuleService.mapPluginsJSONToObject();
@@ -58,7 +54,7 @@ public class InstallPackageController {
         } else {
             model.addAttribute("trigger", new TriggerVO());
         }
-        return "installPackages/add-installPackage";
+        return "redirect:/";
     }
 //    private Trigger buildJobTrigger(JobDetail jobDetail, Long startAt) {
 //        return TriggerBuilder.newTrigger()
