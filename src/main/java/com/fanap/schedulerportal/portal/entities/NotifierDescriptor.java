@@ -35,18 +35,25 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     @JoinColumn(name = "TRIGGER_FK")
     private TriggerVO trigger;
 
-    public NotifierDescriptor(String mmpServerAddress, TriggerVO trigger, boolean enabled, String lastLaunchTime, String jobId, List<Warning> warnings, NotifyMedia enabledMedia) {
-        this.mmpServerAddress = mmpServerAddress;
-        this.trigger = trigger;
-        this.enabled = enabled;
-        this.lastLaunchTime = lastLaunchTime;
-        this.jobId = jobId;
-        this.warnings = warnings;
-        this.enabledMedia = enabledMedia;
-    }
-
     public NotifierDescriptor() {
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public InstallPackage getInstallPackage() {
+        return installPackage;
+    }
+
+    public void setInstallPackage(InstallPackage installPackage) {
+        this.installPackage = installPackage;
+    }
+
 
     public Long getId() {
         return id;
@@ -72,13 +79,6 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         this.trigger = trigger;
     }
 
-    public boolean isCreated() {
-        return enabled;
-    }
-
-    public void setCreated(boolean enabled) {
-        this.enabled = enabled;
-    }
 
     public String getLastLaunchTime() {
         return lastLaunchTime;
@@ -117,12 +117,13 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         return "NotifierDescriptor{" +
                 "id=" + id +
                 ", mmpServerAddress='" + mmpServerAddress + '\'' +
-                ", trigger=" + trigger +
                 ", enabled=" + enabled +
                 ", lastLaunchTime='" + lastLaunchTime + '\'' +
-                ", jobId=" + jobId +
+                ", jobId='" + jobId + '\'' +
                 ", warnings=" + warnings +
                 ", enabledMedia=" + enabledMedia +
+                ", installPackage=" + installPackage +
+                ", trigger=" + trigger +
                 '}';
     }
 
@@ -131,18 +132,19 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotifierDescriptor that = (NotifierDescriptor) o;
-        return trigger == that.trigger &&
-                enabled == that.enabled &&
+        return enabled == that.enabled &&
                 Objects.equals(id, that.id) &&
                 Objects.equals(mmpServerAddress, that.mmpServerAddress) &&
                 Objects.equals(lastLaunchTime, that.lastLaunchTime) &&
                 Objects.equals(jobId, that.jobId) &&
                 Objects.equals(warnings, that.warnings) &&
-                Objects.equals(enabledMedia, that.enabledMedia);
+                Objects.equals(enabledMedia, that.enabledMedia) &&
+                Objects.equals(installPackage, that.installPackage) &&
+                Objects.equals(trigger, that.trigger);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, mmpServerAddress, trigger, enabled, lastLaunchTime, jobId, warnings, enabledMedia);
+        return Objects.hash(id, mmpServerAddress, enabled, lastLaunchTime, jobId, warnings, enabledMedia, installPackage, trigger);
     }
 }
