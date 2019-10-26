@@ -18,7 +18,7 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     @Column
     private String lastLaunchTime;
     @Column
-    private Long jobId;
+    private String jobId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "WARNING_FK")
@@ -35,7 +35,7 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     @JoinColumn(name = "TRIGGER_FK")
     private TriggerVO trigger;
 
-    public NotifierDescriptor(String mmpServerAddress, TriggerVO trigger, boolean enabled, String lastLaunchTime, Long jobId, List<Warning> warnings, NotifyMedia enabledMedia) {
+    public NotifierDescriptor(String mmpServerAddress, TriggerVO trigger, boolean enabled, String lastLaunchTime, String jobId, List<Warning> warnings, NotifyMedia enabledMedia) {
         this.mmpServerAddress = mmpServerAddress;
         this.trigger = trigger;
         this.enabled = enabled;
@@ -88,11 +88,11 @@ public class NotifierDescriptor extends BaseEntity<Long> {
         this.lastLaunchTime = lastLaunchTime;
     }
 
-    public Long getJobId() {
+    public String getJobId() {
         return jobId;
     }
 
-    public void setJobId(Long jobId) {
+    public void setJobId(String jobId) {
         this.jobId = jobId;
     }
 
