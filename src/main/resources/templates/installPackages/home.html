@@ -13,6 +13,7 @@
     <script type="text/javascript" src="https://getbootstrap.com/docs/4.1/assets/js/vendor/popper.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/js/bootstrap.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
     <script type="text/javascript" src="/js/datePicker1/persian-date.js"></script>
     <script type="text/javascript" src="/js/datePicker1/persian-datepicker.js"></script>
@@ -44,7 +45,7 @@
                                     <td th:text="${package.notifierDescriptor.trigger.endTime}"></td>
                                     <td th:text="${package.notifierDescriptor.trigger.repeatHour}"></td>
                                     <td th:text="${package.getPackageName()}"></td>
-                                    <td id="packageCreationDate" th:text="${package.getCreationDate()}"></td>
+                                    <td th:text="${package.getCreationDate()}"></td>
                                     <td>
                                         <a th:href="@{/edit/{id}(id=${package.id})}" class="btn btn-primary">
                                             <i class="fas fa-edit ml-2"></i>
@@ -115,4 +116,27 @@
     </div>
 </div>
 </body>
+<script>
+    var app = new Vue({
+       el: '#app',
+        data: {
+
+        },
+
+        methods: {
+            convertEpochToPersiandate : function (epochNum) {
+                var day = new persianDate(epochNum).format("YYYY/MM/DD");
+                return  day.toString();
+                // return this.convertedDateString;
+            },
+
+            convertEpochToPersiantime : function (epochNum) {
+                var day = new persianDate(epochNum).format("H:m");
+                return  day.toString();
+                // return this.convertedTimeString;
+            }
+        }
+
+    });
+</script>
 </html>
