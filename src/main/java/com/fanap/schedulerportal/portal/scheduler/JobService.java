@@ -114,7 +114,6 @@ public class JobService {
         Long endTime = startTime + 15000L;
         int hour = 5;
 
-
         JobDetail job = createJob("j1");
         Trigger trigger = createTrigger("t1", startTime, endTime, hour);
         JobDetail job2 = createJob("j2");

@@ -14,6 +14,8 @@ import static org.quartz.impl.matchers.GroupMatcher.groupEquals;
 
 public class SchemaVersionJob implements Job {
 
+    private boolean isConflicting = false;
+
     public SchemaVersionJob() {
 
     }
@@ -29,21 +31,7 @@ public class SchemaVersionJob implements Job {
 
 
     public static void main(String[] args) throws SchedulerException {
-        Scheduler sched = SchedulerProvider.getScheduler();
 
-        JobDetail job1 = newJob(SchemaVersionJob.class)
-                .withIdentity("job1", "group1")
-                .usingJobData("isConflicting", "is Conflicting")
-                .build();
-
-        // Define a Trigger that will fire "now", and not repeat
-        Trigger trigger = newTrigger()
-                .withIdentity("trigger1", "group1")
-                .startNow()
-                .build();
-
-    // Schedule the job with the trigger
-        sched.scheduleJob(job1, trigger);
     }
 
 

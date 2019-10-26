@@ -25,8 +25,10 @@ public class PluginModuleService {
     private PluginModuleRepository pluginModuleRepository;
     private NotifyMediaService notifyMediaService;
 
-    private static final String UNZIPPINGPATH = "c://destination";
-//    private static final String PLUGINMODULEPATH = "c://destination/";
+    //WINDOWS
+//    private static final String UNZIPPINGPATH = "c://destination";
+    //LINUX
+    private static final String UNZIPPINGPATH = "/home/edris/destination";
 
     @Autowired
     public PluginModuleService(PluginModuleRepository pluginModuleRepository, FormService formService, NotifyMediaService notifyMediaService) {

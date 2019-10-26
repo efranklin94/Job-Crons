@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 public class NotifyMediaService {
     @Autowired
     private NotifyMediaRepository notifyMediaRepository;
-    private static final String UNZIPPINGPATH = "c://destination";
+    //WINDOWS
+//    private static final String UNZIPPINGPATH = "c://destination";
+    //LINUX
+    private static final String UNZIPPINGPATH = "/home/edris/destination";
 
 
     public NotifyMedia saveNotifyMedia(NotifyMedia notifyMedia) {

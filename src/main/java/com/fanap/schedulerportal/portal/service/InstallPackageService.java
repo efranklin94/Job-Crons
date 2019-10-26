@@ -6,6 +6,7 @@ import com.fanap.schedulerportal.portal.entities.NotifierDescriptor;
 import com.fanap.schedulerportal.portal.entities.PluginModule;
 import com.fanap.schedulerportal.portal.repository.InstallPackageRepository;
 import com.fanap.schedulerportal.portal.repository.NotifierDescriptorRepository;
+import com.fanap.schedulerportal.portal.scheduler.JobService;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.IOUtils;
@@ -31,8 +32,10 @@ public class InstallPackageService {
     @Autowired
     private NotifierDescriptorRepository notifierDescriptorRepository;
 
-    private static final String UNZIPPINGPATH = "c://destination";
-
+    //WINDOWS
+//    private static final String UNZIPPINGPATH = "c://destination";
+    //LINUX
+    private static final String UNZIPPINGPATH = "/home/edris/destination";
     public InstallPackage saveInstallPackageBundle(InstallPackage installPackage) {
         return installPackageRepository.save(installPackage);
     }
@@ -138,7 +141,17 @@ public class InstallPackageService {
             return new ArrayList<>();
         }
     }
+
+    public void setJob(String installPackageJobName, String triggerName, Long startTime, Long endTime, int hour) {
+        JobService.createJob(installPackageJobName);
+        JobService.createTrigger(triggerName, startTime, endTime, hour);
+
+    }
+
 }
+
+
+
 //        try {
 //            FileInputStream is = new FileInputStream("src/main/resources/users.json");
 //            JsonParserFactory factory = Json.createParserFactory(null);
