@@ -34,6 +34,8 @@
                                     <th>Start Time</th>
                                     <th>End Time</th>
                                     <th>Repeat every desired hour</th>
+                                    <th>package name</th>
+                                    <th>creation date</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,6 +43,8 @@
                                     <td th:text="${package.notifierDescriptor.trigger.startTime}"></td>
                                     <td th:text="${package.notifierDescriptor.trigger.endTime}"></td>
                                     <td th:text="${package.notifierDescriptor.trigger.repeatHour}"></td>
+                                    <td th:text="${package.getPackageName()}"></td>
+                                    <td id="packageCreationDate" th:text="${package.getCreationDate()}"></td>
                                     <td>
                                         <a th:href="@{/edit/{id}(id=${package.id})}" class="btn btn-primary">
                                             <i class="fas fa-edit ml-2"></i>

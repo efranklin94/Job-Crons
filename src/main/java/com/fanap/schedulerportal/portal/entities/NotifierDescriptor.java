@@ -16,7 +16,7 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     @Column
     private boolean enabled;
     @Column
-    private String lastLaunchTime;
+    private Long lastLaunchTime;
     @Column
     private String jobId;
 
@@ -80,11 +80,11 @@ public class NotifierDescriptor extends BaseEntity<Long> {
     }
 
 
-    public String getLastLaunchTime() {
+    public Long getLastLaunchTime() {
         return lastLaunchTime;
     }
 
-    public void setLastLaunchTime(String lastLaunchTime) {
+    public void setLastLaunchTime(Long lastLaunchTime) {
         this.lastLaunchTime = lastLaunchTime;
     }
 

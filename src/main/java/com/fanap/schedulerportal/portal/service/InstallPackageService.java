@@ -35,6 +35,8 @@ public class InstallPackageService {
     @Autowired
     private NotifierDescriptorRepository notifierDescriptorRepository;
 
+    String jobId;
+    Long lastLaunchTime;
     //WINDOWS
 //    private static final String UNZIPPINGPATH = "c://destination";
     //LINUX
@@ -98,10 +100,16 @@ public class InstallPackageService {
 
             NotifierDescriptor descriptor = new NotifierDescriptor();
             descriptor.setTrigger(trigger);
+            descriptor.setInstallPackage(installPackage);
+            descriptor.setJobId(jobId);
+            descriptor.setCreationDate(System.currentTimeMillis());
+            descriptor.setLastLaunchTime(lastLaunchTime);
+
             /***ADDITIONAL SETTERS FOR DESCRIPTOR***/
             notifierDescriptorRepository.save(descriptor);
             installPackage.setNotifierDescriptor(descriptor);
             installPackage.setPluginModules(pluginModules);
+            installPackage.setCreationDate(System.currentTimeMillis());
             installPackageRepository.save(installPackage);
 //            installPackageRepository.findAll().forEach(System.out::println);
 
@@ -148,7 +156,8 @@ public class InstallPackageService {
     public void setJob(String installPackageJobName, String triggerName, Long startTime, Long endTime, int hour) throws SchedulerException {
         Scheduler scheduler = SchedulerProvider.getScheduler();
         scheduler.scheduleJob(JobService.createJob(installPackageJobName), JobService.createTrigger(triggerName, startTime, endTime, hour));
-
+        jobId = installPackageJobName;
+        lastLaunchTime = System.currentTimeMillis();
     }
 
 }
