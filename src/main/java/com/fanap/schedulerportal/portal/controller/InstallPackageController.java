@@ -6,6 +6,7 @@ import com.fanap.schedulerportal.portal.repository.TriggerVORepository;
 import com.fanap.schedulerportal.portal.service.InstallPackageService;
 import com.fanap.schedulerportal.portal.service.PluginModuleService;
 import com.fanap.schedulerportal.portal.service.RecordNotFoundException;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,7 @@ public class InstallPackageController {
     private PluginModuleService pluginModuleService;
 
     @RequestMapping("/addInstallPackage")
-    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes,@ModelAttribute("trigger") TriggerVO trigger) {
+    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes,@ModelAttribute("trigger") TriggerVO trigger) throws SchedulerException {
 
         installPackageService.deleteTmpFolder();
         File zip = installPackageService.saveFileToTmpFolder(file);
@@ -32,6 +33,8 @@ public class InstallPackageController {
 
         installPackageService.mapPackageManifestJSONToObject(trigger);
         pluginModuleService.mapPluginsJSONToObject();
+
+        installPackageService.setJob(file.getName(),file.getName(),trigger.getStartTime(),trigger.getEndTime(),trigger.getRepeatHour());
 
         return "redirect:/";
     }

@@ -32,13 +32,7 @@ public class SchedulerProvider {
 
 
 
-    public static void startScheduler() throws SchedulerException {
-        scheduler.start();
-    }
 
-    public static void standbyScheduler() throws SchedulerException {
-        scheduler.standby();
-    }
 
     public static void main(String[] args) throws SchedulerException {
         Scheduler scheduler1 = SchedulerProvider.getScheduler();

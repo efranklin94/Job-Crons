@@ -7,9 +7,12 @@ import com.fanap.schedulerportal.portal.entities.PluginModule;
 import com.fanap.schedulerportal.portal.repository.InstallPackageRepository;
 import com.fanap.schedulerportal.portal.repository.NotifierDescriptorRepository;
 import com.fanap.schedulerportal.portal.scheduler.JobService;
+import com.fanap.schedulerportal.portal.scheduler.SchedulerProvider;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.IOUtils;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -142,9 +145,9 @@ public class InstallPackageService {
         }
     }
 
-    public void setJob(String installPackageJobName, String triggerName, Long startTime, Long endTime, int hour) {
-        JobService.createJob(installPackageJobName);
-        JobService.createTrigger(triggerName, startTime, endTime, hour);
+    public void setJob(String installPackageJobName, String triggerName, Long startTime, Long endTime, int hour) throws SchedulerException {
+        Scheduler scheduler = SchedulerProvider.getScheduler();
+        scheduler.scheduleJob(JobService.createJob(installPackageJobName), JobService.createTrigger(triggerName, startTime, endTime, hour));
 
     }
 

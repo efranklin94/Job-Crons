@@ -2,6 +2,7 @@ package com.fanap.schedulerportal.portal;
 
 import com.fanap.schedulerportal.portal.repository.UserRepository;
 import com.fanap.schedulerportal.portal.repository.RoleRepository;
+import com.fanap.schedulerportal.portal.scheduler.JobService;
 import com.fanap.schedulerportal.portal.scheduler.SchedulerProvider;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -24,11 +25,5 @@ public class PortalApplication implements Runnable{
 
     @Override
     public void run() {
-        Scheduler scheduler = SchedulerProvider.getScheduler();
-        try {
-            scheduler.start();
-        } catch (SchedulerException e) {
-            e.printStackTrace();
-        }
     }
 }
