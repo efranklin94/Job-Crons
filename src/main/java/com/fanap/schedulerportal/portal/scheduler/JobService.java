@@ -137,18 +137,37 @@ public class JobService {
         System.out.println("/n/n/n *** UNSCHEDULING T1 *** /n/n/n/n");
         Thread.sleep(10000L);
         unscheduleJobFromScheduler(scheduler, "t1");
+        System.out.println("/n/n/n***************/n/n listing all jobs and triggers");
+        findAllJobs(scheduler);
+        findAllTriggers(scheduler);
+        System.out.println("/n/n/n***************/n/n ");
+
 
         System.out.println("/n/n/n *** UNSCHEDULING T2 *** /n/n/n/n");
         Thread.sleep(15000L);
         unscheduleJobFromScheduler(scheduler, "t2");
+        System.out.println("/n/n/n***************/n/n listing all jobs and triggers");
+        findAllJobs(scheduler);
+        findAllTriggers(scheduler);
+        System.out.println("/n/n/n***************/n/n ");
 
-        System.out.println("/n/n/n *** SCHEDULING T1 *** /n/n/n/n");
+
+        System.out.println("/n/n/n *** SCHEDULING T2 *** /n/n/n/n");
         Thread.sleep(10000L);
         scheduler.scheduleJob(job2, trigger2);
+        System.out.println("/n/n/n***************/n/n listing all jobs and triggers");
+        findAllJobs(scheduler);
+        findAllTriggers(scheduler);
+        System.out.println("/n/n/n***************/n/n ");
 
         System.out.println("/n/n/n *** CREATING NEW TRIGGER FOR J2 *** /n/n/n/n");
         Thread.sleep(5000L);
         updateTrigger(scheduler, "t3", System.currentTimeMillis(), System.currentTimeMillis() + 10000L, 1, "t2");
+        System.out.println("/n/n/n***************/n/n listing all jobs and triggers");
+        findAllJobs(scheduler);
+        findAllTriggers(scheduler);
+        System.out.println("/n/n/n***************/n/n ");
+
     }
 
 }
