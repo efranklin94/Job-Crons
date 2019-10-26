@@ -4,6 +4,7 @@ import com.fanap.schedulerportal.portal.entities.InstallPackage;
 import com.fanap.schedulerportal.portal.repository.InstallPackageRepository;
 import com.fanap.schedulerportal.portal.service.InstallPackageService;
 import com.fanap.schedulerportal.portal.service.PluginModuleService;
+import com.sun.media.sound.ModelByteBufferWavetable;
 import net.lingala.zip4j.core.ZipFile;
 import org.quartz.JobDetail;
 import org.quartz.SimpleScheduleBuilder;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.jws.WebParam;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -32,14 +35,10 @@ public class InstallPackageController {
     @Autowired
     private InstallPackageService installPackageService;
     @Autowired
-    protected PluginModuleService pluginModuleService;
-
-    private Long startTime = 0L;
-    private Long endTime = 0L;
-    private int repeatHour = 0;
+    private PluginModuleService pluginModuleService;
 
     @PostMapping("/addInstallPackage")
-    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes, Model model) {
+    public String createInstallPackage(@RequestParam("file") MultipartFile file ,RedirectAttributes redirectAttributes, TriggerVO triggerVO1) {
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
             return "redirect:uploadStatus";
@@ -53,20 +52,21 @@ public class InstallPackageController {
         pluginModuleService.mapPluginsJSONToObject();
 //        cronJobSch();
 
-        System.out.println(startTime);
-        System.out.println(endTime);
-        System.out.println(repeatHour);
+//        System.out.println(startTime);
+//        System.out.println(endTime);
+        System.out.println(triggerVO1.getRepeatHour());
 
         return "installPackages/add-installPackage";
     }
 
     @RequestMapping
     public String homeInstallPackageController(Model model) {
-
-
-        model.addAttribute("startTime", startTime.toString());
-        model.addAttribute("endTime", endTime.toString());
-        model.addAttribute("repeatHour", repeatHour);
+        
+//        model.addAttribute("triggerVO", triggerVO);
+//
+//        model.addAttribute("startTime", startTime.toString());
+//        model.addAttribute("endTime", endTime.toString());
+//        model.addAttribute("repeatHour", repeatHour);
 
         return "installPackages/home";
     }
