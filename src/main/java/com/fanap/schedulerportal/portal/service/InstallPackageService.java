@@ -1,19 +1,19 @@
 package com.fanap.schedulerportal.portal.service;
 
+import com.fanap.schedulerportal.portal.entities.TriggerVO;
 import com.fanap.schedulerportal.portal.entities.InstallPackage;
+import com.fanap.schedulerportal.portal.entities.NotifierDescriptor;
 import com.fanap.schedulerportal.portal.entities.PluginModule;
 import com.fanap.schedulerportal.portal.repository.InstallPackageRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fanap.schedulerportal.portal.repository.NotifierDescriptorRepository;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.*;
 import java.io.FileReader;
@@ -28,6 +28,8 @@ public class InstallPackageService {
     private InstallPackageRepository installPackageRepository;
     @Autowired
     private PluginModuleService pluginModuleService;
+    @Autowired
+    private NotifierDescriptorRepository notifierDescriptorRepository;
 
     private static final String UNZIPPINGPATH = "c://destination";
 
@@ -60,7 +62,7 @@ public class InstallPackageService {
         }
     }
 
-    public void mapPackageManifestJSONToObject() {
+    public void mapPackageManifestJSONToObject(TriggerVO trigger) {
         try {
             Object obj = new JSONParser().parse(new FileReader(UNZIPPINGPATH + "//plugins-index.manifest.json"));
             JSONObject jo = (JSONObject) obj;
@@ -88,6 +90,11 @@ public class InstallPackageService {
                 pluginModules.add(pluginModule);
             }
 
+            NotifierDescriptor descriptor = new NotifierDescriptor();
+            descriptor.setTrigger(trigger);
+            /***ADDITIONAL SETTERS FOR DESCRIPTOR***/
+            notifierDescriptorRepository.save(descriptor);
+            installPackage.setNotifierDescriptor(descriptor);
             installPackage.setPluginModules(pluginModules);
             installPackageRepository.save(installPackage);
 //            installPackageRepository.findAll().forEach(System.out::println);
@@ -111,6 +118,25 @@ public class InstallPackageService {
             }
         }
         return directoryToBeDeleted.delete();
+    }
+
+    public InstallPackage getUserById(Long id) throws RecordNotFoundException
+    {
+        Optional<InstallPackage> user = installPackageRepository.findById(id);
+
+        if(user.isPresent()) {
+            return user.get();
+        } else {
+            throw new RecordNotFoundException("No installPackage record exist for given id");
+        }
+    }
+    public Iterable<InstallPackage> getAllPackages() {
+        List<InstallPackage> users = (List<InstallPackage>) installPackageRepository.findAll();
+        if(users.size() > 0) {
+            return users;
+        } else {
+            return new ArrayList<>();
+        }
     }
 }
 //        try {
